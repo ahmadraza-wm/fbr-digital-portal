@@ -3,8 +3,6 @@ definePageMeta({
   middleware: "auth",
   name: "dashboard",
 });
-import adminDashboard from '@/components/adminDashboard.vue';
-import agentDashboard from '@/components/agentDashboard.vue';
 const authStore = useAuthStore();
 const userRole = useCookie("roles");
 if(authStore.roles === null)
