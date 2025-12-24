@@ -1,0 +1,377 @@
+// Write your overrides
+.text-black {
+  color: black !important;
+}
+
+.text-red {
+  color: #ff8682;
+}
+
+.text-red {
+  color: #ff8682;
+}
+
+.text-success {
+  color: #28c76f;
+}
+
+.date-range {
+  border: 2px solid red;
+}
+
+.date-range:focus {
+  border: 2px solid red !important;
+}
+
+.date-range:focus-visible {
+  border: 2px solid red !important;
+}
+
+.btn-1 {
+  background-color: #ffe9a4;
+  color: #e7b001 !important;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.bg-lightheader {
+  background-color: #f8fafc;
+}
+
+.bg-grey {
+  background-color: #e6e6e6;
+}
+
+.bg-lightgrey {
+  background-color: #e6e6e67d !important;
+}
+
+.bg-color2 {
+  background-color: #ffe9a4 !important;
+}
+
+.warning-bg {
+  background-color: #e7b001;
+}
+
+.warning-color {
+  background-color: #fe5f5757;
+}
+
+.warning-text {
+  color: #fe5f57;
+}
+
+.link-color {
+  color: #febc2e !important;
+}
+
+.light-bg {
+  background-color: #fbfafa !important;
+}
+
+.fs-9 {
+  font-size: 9px !important;
+}
+
+.fs-10 {
+  font-size: 10px !important;
+}
+
+// .v-data-table__td {
+//     padding-left: 5px !important;padding-leftpadding-leftpadding-leftpadding-leftpadding-leftpadding-leftpadding-leftpadding-leftpadding-leftpadding-leftpadding-left
+//     padding-right: 5px !important;padding-rightpadding-rightpadding-rightpadding-rightpadding-rightpadding-rightpadding-rightpadding-rightpadding-rightpadding-rightpadding-right
+// }
+.fs-11 {
+  font-size: 11px !important;
+}
+
+.fs-12 {
+  font-size: 12px !important;
+}
+
+.fs-13 {
+  font-size: 13px !important;
+}
+
+.fs-14 {
+  font-size: 14px;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
+.fs-20 {
+  font-size: 20px;
+}
+
+.fs-25 {
+  font-size: 25px;
+}
+
+.fs-30 {
+  font-size: 30px;
+}
+
+.text-16 {
+  font-size: 16px !important;
+}
+
+.lh-22 {
+  line-height: 22px;
+}
+
+.lh-24 {
+  line-height: 24px;
+}
+
+.w-20 {
+  inline-size: 20% !important;
+}
+
+.info-card::after {
+  border: 1px solid red;
+  block-size: 10px;
+  inline-size: 1px;
+}
+
+.input-bg {
+  background-color: rgb(40, 199, 111, 20%);
+}
+
+.v-table {
+  font-size: 14px !important;
+}
+
+.v-overlay__content {
+  position: absolute !important;
+}
+
+.input-color {
+  color: #28c76f;
+}
+
+.login-btn {
+  background-color: #4eba8c !important;
+  color: white !important;
+}
+
+.login-btn:hover {
+  background-color: #4eba8c !important;
+  color: white !important;
+}
+
+.login-btn .v-btn__underlay {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.card-logo {
+  inline-size: 48px;
+}
+
+.login-vector {
+  inline-size: 150px;
+  inset-block-start: 50px;
+  inset-inline-start: -35px;
+}
+
+.login-vector1 {
+  inline-size: 150px;
+  inset-block-end: 50px;
+  inset-inline-end: -35px;
+}
+
+.fs-13 {
+  font-size: 13px;
+}
+
+.fs-15 {
+  font-size: 15px;
+}
+
+.fs-16 {
+  font-size: 16px;
+}
+
+.label-color {
+  color: rgba(47, 43, 61, 90%);
+}
+
+li::marker {
+  margin-inline-end: 5px !important;
+}
+
+.readonly-style input {
+  border: none !important;
+  background-color: #f5f5f5 !important; /* light gray */
+  color: #555; /* Optional: softer text color */
+  pointer-events: none; /* Optional: prevents focus */
+}
+
+.readonly-style input:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.choose-file {
+  position: relative;
+  inset-block-start: 30px;
+  inset-inline-start: -30px;
+}
+
+.v-data-table__td {
+  color: #2f2b3de5 !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  text-wrap: nowrap !important;
+}
+
+.v-table > .v-table__wrapper > table > tbody > tr > td,
+.v-table > .v-table__wrapper > table > thead > tr > td,
+.v-table > .v-table__wrapper > table > tfoot > tr > td {
+  block-size: var(--v-table-row-height);
+  font-size: 13px !important;
+}
+
+.v-data-table-header__content {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.partner-list {
+  border-block-start: 1px solid #2f2b3d1f;
+  table-layout: auto;
+}
+
+.menu-link {
+  color: rgba(47, 43, 61, 90%) !important;
+}
+
+.btn-link {
+  background-color: #e7b001 !important;
+  color: white !important;
+}
+
+.text-dark {
+  color: #2f2b3de8;
+}
+
+.text-color {
+  color: #2f2b3de5;
+}
+
+.text-color1 {
+  color: #7b7b7be5;
+}
+
+.text-color2 {
+  color: #2f2b3db3;
+}
+
+.v-alert__prepend {
+  display: none !important;
+}
+
+.payment-icon {
+  border-radius: 5px;
+  background: #eeedf0;
+  block-size: 45px !important;
+  font-size: 32px;
+  inline-size: 45px !important;
+}
+
+.v-badge__wrapper {
+  margin: 0;
+}
+
+th {
+  position: relative;
+  padding: 10px;
+  text-align: start;
+}
+
+th:not(:last-child)::after {
+  position: absolute;
+  background-color: #ddd;
+  block-size: 20px;
+  content: "";
+  inline-size: 1px;
+  inset-block-start: 20px;
+  inset-inline-end: 0;
+}
+
+.bg-red {
+  background-color: red !important;
+  color: white !important;
+}
+
+.search_btn {
+  background-color: #ffe9a4 !important;
+  color: #2f2b3d9e !important;
+}
+
+.reset_btn {
+  background-color: #2f2b3d40 !important;
+  color: #2f2b3d9e !important;
+}
+
+.header-bg {
+  background-color: #fbfafa !important;
+}
+
+.unverify-user {
+  border-radius: 50%;
+  background: red;
+  block-size: 18px;
+  inline-size: 18px;
+  margin-block-end: 0;
+  margin-inline-end: 5px;
+}
+
+.verify-user {
+  border-radius: 50%;
+  background: green;
+  block-size: 18px;
+  inline-size: 18px;
+  margin-block-end: 0;
+  margin-inline-end: 5px;
+}
+
+input[type="month"] {
+  display: block !important;
+}
+
+.layout-content-width-boxed .layout-page-content {
+  margin-inline: none !important;
+  max-inline-size: none !important;
+}
+
+.layout-content-width-boxed.layout-wrapper.layout-nav-type-vertical .layout-navbar,
+.layout-content-width-boxed.layout-wrapper.layout-nav-type-vertical .layout-footer {
+  margin-inline: none !important;
+  max-inline-size: none !important;
+}
+
+.v-data-table__th,
+.v-data-table__td {
+  white-space: normal !important;
+}
+
+.v-table > .v-table__wrapper > table > tbody > tr > td,
+.v-table > .v-table__wrapper > table > tbody > tr > th,
+.v-table > .v-table__wrapper > table > thead > tr > td,
+.v-table > .v-table__wrapper > table > thead > tr > th,
+.v-table > .v-table__wrapper > table > tfoot > tr > td,
+.v-table > .v-table__wrapper > table > tfoot > tr > th {
+  padding-block: 0 !important;
+  padding-inline: 6px !important;
+}
+
+.layout-nav-type-vertical .layout-vertical-nav.scrolled .vertical-nav-items-shadow {
+  opacity: 0 !important;
+}

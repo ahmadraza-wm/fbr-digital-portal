@@ -1,29 +1,35 @@
-# README #
+# vue
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This template should help get you started developing with Vue 3 in Vite.
 
-### What is this repository for? ###
+## Recommended IDE Setup
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+[VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur).
 
-### How do I get set up? ###
+## Type Support for `.vue` Imports in TS
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates.
 
-### Contribution guidelines ###
+However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can run `Volar: Switch TS Plugin on/off` from VS Code command palette.
 
-* Writing tests
-* Code review
-* Other guidelines
+## Customize configuration
 
-### Who do I talk to? ###
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-* Repo owner or admin
-* Other community or team contact
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
