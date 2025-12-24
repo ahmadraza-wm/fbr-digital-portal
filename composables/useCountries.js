@@ -17,7 +17,7 @@ export const useCountries = () => {
     confirmAction,
   } = useUiFeedback();
 
-  const CountriesList = ref();
+  const CountriesList = ref([]);
   const statuses = [
     { value: 1, text: "Active" },
     { value: 0, text: "Inactive" },

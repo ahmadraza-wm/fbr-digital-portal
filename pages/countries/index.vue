@@ -128,7 +128,7 @@ onMounted(async() => {
         @update:options="options = $event">
 
         <template #bottom>
-          <VCardText class="pt-2 pb-0">
+          <VCardText class="pt-2 pb-0 border-t-sm" >
             <div class="d-flex flex-wrap justify-space-between align-center gap-y-2 mt-2">
               <span class="text-caption text-muted">
                 Showing
