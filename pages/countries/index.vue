@@ -1,5 +1,4 @@
 <script setup>
-import { usecorridorTarget } from '@/composables/reports/useCorridorTarget';
 // const countryCurrencyStore = useCountryCurrencyStore();
 // const { sending_countries, receiving_countries } =
 //   storeToRefs(countryCurrencyStore);
@@ -7,8 +6,10 @@ import { usecorridorTarget } from '@/composables/reports/useCorridorTarget';
 //   middleware: "auth",
 //   permission: "corridor.target.report"
 // })
+import { useCountries } from '@/composables/useCountries';
+const {fetchCountries,CountriesList} = useCountries();
 const permissionStore = usePermissionStore()
-const { userList, fetchCorridorTarget, exportCorridorTarget } = usecorridorTarget();
+const userList = ref([]);
 const options = ref({
   page: 1,
   itemsPerPage: 5,
@@ -41,38 +42,18 @@ const resetFilters = () => {
   frequency.value = 'all'
 };
 
+const headers = [
+  { title: "#", key: "sr_no" },
+  { title: "Country Name", key: "name" },
+  { title: "Currency", key: "currency" },
+  { title: "Capital", key: "capital" },
+  { title: "ISO2", key: "iso2" },
+  { title: "ISO3", key: "iso3" },
+  { title: "Phone Code", key: "dial_code"},
+];
 
-
-const frequencyItem = ref([{
-  title: "All",
-  value: "all"
-},
-{
-  title: "Weekly",
-  value: "weekly"
-},
-{
-  title: "Monthly",
-  value: "monthly"
-}
-])
-
-const headers =
-  [
-    { title: "#", key: "sr_no" },
-    { title: "Sending Country", key: "sending_country" },
-    { title: "Receving Country", key: "receiving_country" },
-    { title: "Frequency", key: "frequency" },
-    { title: "From Date", key: "date_from" },
-    { title: "To Date", key: "date_to" },
-    { title: "Target Count", key: "target_count" },
-    { title: "Achieved Count", key: "achieved_count" },
-    { title: "Target Amount", key: "target_amount" },
-    { title: "Achieved Amount", key: "achieved_amount" }
-  ];
-
-onMounted(() => {
-  fetchCorridorTarget(form);
+onMounted(async() => {
+  await fetchCountries();
 });
 </script>
 <template>
@@ -80,12 +61,11 @@ onMounted(() => {
     <v-row>
       <v-col cols="12">
         <v-card-title class="border-b-sm">
-          <h4 class="text-h5 py-3">Corridor Target Report</h4>
+          <h4 class="text-h5 py-3">Countries</h4>
         </v-card-title>
       </v-col>
     </v-row>
-
-    <v-card-text class="pt-1 my-4 pb-3">
+    <!-- <v-card-text class="pt-1 my-4 pb-3">
       <VForm @submit.prevent="" :key="formKey">
         <v-row class="ps-0">
           <v-col cols="12" sm="6" md="3">
@@ -122,9 +102,9 @@ onMounted(() => {
           </v-col>
         </v-row>
       </VForm>
-    </v-card-text>
+    </v-card-text> -->
     <VCardText class="flex-wrap gap-4 d-flex justify-space-between align-center border-t-sm">
-      <div class="me-3 d-flex gap-3 pt-6">
+      <div class="me-3 d-flex gap-3">
         <span class="fs-16 pt-2">Show</span>
         <AppAutocomplete v-model="options.itemsPerPage" :items="[
           { value: -1, title: 'All' },
@@ -144,21 +124,21 @@ onMounted(() => {
     </VCardText>
 
     <VCardText class="px-0">
-      <PaginatedDataTable :headers="headers" :items="userList" :options="options" :loading="loading" :search="search"
+      <PaginatedDataTable :headers="headers" :items="CountriesList" :options="options" :loading="loading" :search="search"
         @update:options="options = $event">
 
         <template #bottom>
-          <VCardText class="pt-2 pb-0">
+          <VCardText class="pt-2 pb-0 border-t-sm" >
             <div class="d-flex flex-wrap justify-space-between align-center gap-y-2 mt-2">
               <span class="text-caption text-muted">
                 Showing
                 {{ (options.page - 1) * options.itemsPerPage + 1 }}
                 to
-                {{ Math.min(options.page * options.itemsPerPage, userList.length) }}
-                of {{ userList.length }} entries
+                {{ Math.min(options.page * options.itemsPerPage, CountriesList.length) }}
+                of {{ CountriesList.length }} entries
               </span>
               <VPagination v-model="options.page" :total-visible="$vuetify.display.smAndDown ? 3 : 5"
-                :length="Math.ceil(userList.length / options.itemsPerPage)" />
+                :length="Math.ceil(CountriesList.length / options.itemsPerPage)" />
             </div>
           </VCardText>
         </template>
