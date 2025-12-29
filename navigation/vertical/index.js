@@ -16,37 +16,24 @@ export default [
     title: "Countries",
     to: { name: "countries" },
     icon: { icon: countriesIcon },
+    permission: "countries.view"
   },
-  // {
-  //   title: "Agents",
-  //   icon: { icon: agentIcon },
-  //   children: [
-  //     {
-  //       title: "Create Agent",
-  //       to: "agents-create-agent",
-  //       permission: "agents.store"
-  //     },
-  //     {
-  //       title: "Agents List",
-  //       to: "agents-agent-list",
-  //       permission: "agents.index"
-  //     },
-  //     // {
-  //     //   title: "Agents Limits",
-  //     //   to: "agents-agent-limits",
-  //     // },
-  //     {
-  //       title: "Agent Deposits",
-  //       to: "agents-agent-deposits",
-  //       permission: "agentDeposits.index"
-  //     },
-  //     {
-  //       title: "Agent Ledger",
-  //       to: "agents-agent-ledger",
-  //       permission: "agent.ledger"
-  //     }
-  //   ],
-  // },
+  {
+    title: "Companies",
+    icon: { icon: 'tabler-building-skyscraper' },
+    children: [
+      {
+        title: "Create Company",
+        to: "companies-add",
+        permission: 'companies.create'
+      },
+      {
+        title: "Companies List",
+        to: "companies",
+        permission: 'companies.view'
+      },
+    ],
+  },
   // {
   //   title: "Customers",
   //   icon: { icon: "tabler-users-group" },

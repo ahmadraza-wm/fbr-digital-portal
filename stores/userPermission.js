@@ -17,7 +17,7 @@ export const usePermissionStore = defineStore('permission', {
         const res = await $axios.get(`/users/${loggedInUser.value.id}/permissions`)
 
         // Normalize API response
-        const permission = res.data.role_permissions.map(item => ({
+        const permission = res.data.assigned_permissions.map(item => ({
           permission_name: item.name,
         }))
 
