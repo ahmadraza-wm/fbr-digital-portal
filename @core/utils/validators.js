@@ -14,18 +14,18 @@ export const requiredValidator = value => {
     return "This field is required"
   }
 
-  // Boolean false (not valid, but allow numeric 0)
-  if (value === false) {
+  // empty string
+  if (typeof value === "string" && value.trim() === "") {
     return "This field is required"
   }
 
-  // Strings (trim whitespace)
-  if (typeof value === "string" && value.trim().length === 0) {
-    return "This field is required"
+  // ✅ booleans (true / false) are valid
+  if (typeof value === "boolean") {
+    return true
   }
 
-  // ✅ 0 is valid → don’t reject it
-  if (value === 0) {
+  // numbers incl 0 are valid
+  if (typeof value === "number") {
     return true
   }
 

@@ -2,10 +2,10 @@
 // const countryCurrencyStore = useCountryCurrencyStore();
 // const { sending_countries, receiving_countries } =
 //   storeToRefs(countryCurrencyStore);
-// definePageMeta({
-//   middleware: "auth",
-//   permission: "corridor.target.report"
-// })
+definePageMeta({
+  middleware: "auth",
+  permission: "countries.view"
+})
 import { useCountries } from '@/composables/useCountries';
 const {fetchCountries,CountriesList} = useCountries();
 const permissionStore = usePermissionStore()
@@ -60,8 +60,8 @@ onMounted(async() => {
   <v-card>
     <v-row>
       <v-col cols="12">
-        <v-card-title class="border-b-sm">
-          <h4 class="text-h5 py-3">Countries</h4>
+        <v-card-title class="border-b-sm bg-primary">
+          <h4 class="text-h5 py-3 text-white">Countries</h4>
         </v-card-title>
       </v-col>
     </v-row>
