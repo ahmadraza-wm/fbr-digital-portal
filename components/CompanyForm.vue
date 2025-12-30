@@ -11,7 +11,6 @@ const formData = ref({
   first_name: "",
   last_name: "",
   password: "",
-  password: "",
   status: "",
 });
 const route = useRoute();
@@ -93,7 +92,7 @@ const submitForm = async () => {
       </VCol>
       <VCol cols="12" md="6">
         <span class="fs-13 label-color">Email<span class="text-red">*</span></span>
-        <AppTextField v-model="formData.email" :rules="CompanyDetail?.email != formData.email || !props.isEdit?[requiredValidator, emailValidator]:[]" placeholder="Email"
+        <AppTextField v-model="formData.email" :rules="[requiredValidator, emailValidator]" placeholder="Email"
           name="email_fake" autocomplete="off" />
       </VCol>
       <VCol cols="12" md="6">

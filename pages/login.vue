@@ -13,7 +13,7 @@ import CardLogo8 from "@images/logos/8.png";
 import CardLogo9 from "@images/logos/9.png";
 import BgImage1 from "@images/logos/bg-1.png";
 import BgImage2 from "@images/logos/bg-2.png";
-import Companylogo from "@images/logos/africlinks-logo-2.png";
+import Companylogo from "@images/logos/payout-hub-logo.png";
 import authV2LoginIllustrationBorderedDark from "@images/pages/auth-v2-login-illustration-bordered-dark.png";
 import authV2LoginIllustrationBorderedLight from "@images/pages/auth-v2-login-illustration-bordered-light.png";
 import authV2LoginIllustrationDark from "@images/pages/auth-v2-login-illustration-dark.png";

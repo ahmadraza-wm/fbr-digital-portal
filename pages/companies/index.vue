@@ -1,7 +1,7 @@
 <script setup>
 definePageMeta({
   middleware: "auth",
-  permission: "companies.view"
+  permission: "companies.list"
 })
 const permissionStore = usePermissionStore()
 import { onMounted, ref } from "vue";
@@ -108,8 +108,8 @@ onMounted(() => {
                   <VListItem :to="`/companies/edit/${item.id}`">
                     <VListItemTitle>Edit</VListItemTitle>
                   </VListItem>
-                  <VListItem>
-                    <VListItemTitle>Permissions</VListItemTitle>
+                  <VListItem :to="`/companies/manage-permissions/${item.id}`">
+                    <VListItemTitle>Manage Permissions</VListItemTitle>
                   </VListItem>
                   <VListItem>
                     <VListItemTitle>Login Ip Settings</VListItemTitle>

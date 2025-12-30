@@ -128,7 +128,7 @@ const filteredNavItems = computed(() => {
     ]"
   >
     <!-- 👉 Header -->
-    <div class="nav-header pb-0 px-0">
+    <div class="nav-header pb-0 px-0 mx-1">
       <slot name="nav-header">
         <NuxtLink
           to="/"

@@ -11,12 +11,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       titleTemplate: '%s - Money Transfer',
-      title: 'AfricLink',
+      title: 'Payout Hub',
 
       link: [{
         rel: 'icon',
         type: 'image/png',
-        href: "/africlinks-fav.png",
+        href: "/payout-hub-fav.png",
       }],
     },
   },
