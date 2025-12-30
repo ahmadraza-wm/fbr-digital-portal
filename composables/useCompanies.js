@@ -20,6 +20,7 @@ export const useCompanies = () => {
   const CompaniesList = ref([]);
   const CompanyDetail = ref();
   const user_permissions = ref();
+  const apiSecrets = ref();
   const statuses = [
     { value: true, text: "Active" },
     { value: false, text: "Inactive" },
@@ -155,7 +156,7 @@ export const useCompanies = () => {
       hideLoading();
     }
   };
-  
+
   const addLoginIpByUserId = async (id, payload) => {
     showLoading("Adding Login Ip...");
     try {
@@ -174,7 +175,7 @@ export const useCompanies = () => {
       hideLoading();
     }
   };
-  
+
   const updateLoginIpByUserId = async (id, ipId, payload) => {
     showLoading("Updating Login Ip...");
     try {
@@ -194,13 +195,84 @@ export const useCompanies = () => {
     }
   };
 
-   const deleteLoginIpByUserId = async (id, ipId, payload) => {
+  const deleteLoginIpByUserId = async (id, ipId, payload) => {
     showLoading("Deleting Login Ip...");
     try {
       const response = await $axios.delete(`/companies/${id}/ips/${ipId}`)
       showSuccess('Login Ip Deleted Successfully');
     } catch (error) {
       console.error("Error Deleting Login Ip:", error);
+
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+      return false;
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchApiKeySecrets = async (id) => {
+    showLoading("Fetching Api Secrets...");
+    try {
+      const response = await $axios.get(`/companies/${id}/secrets`)
+      apiSecrets.value = response.data.data;
+      showSuccess('Api Secrets Fetched Successfully');
+    } catch (error) {
+      console.error("Error Fetching Api Secrets:", error);
+
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const updateWebhookUrl = async (id, payload) => {
+    showLoading("Updating Webhook Url...");
+    try {
+      const response = await $axios.put(`/companies/${id}/webhook`, {
+        webhook_url: payload,
+      })
+      if (response.data.success) {
+        showSuccess(response.data.message);
+        await fetchApiKeySecrets(id);
+      }
+      else {
+        showError(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error Updating Webhook Url:", error);
+
+      const messages = error.response?.data?.webhook_url
+        ? Object.values(error.response.data.webhook_url).flat()
+        : error.response?.data?.webhook_url || "Something went wrong";
+
+      showError(messages);
+      return false;
+    } finally {
+      hideLoading();
+    }
+  };
+  
+  const resetSecretKeys = async (id) => {
+    showLoading("Updating Api Keys...");
+    try {
+      const response = await $axios.post(`/companies/${id}/rotate-secrets`)
+      if (response.data.success) {
+        showSuccess(response.data.message);
+        await fetchApiKeySecrets(id);
+      }
+      else {
+        showError(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error Updating Api Url:", error);
 
       const messages = error.response?.data?.errors
         ? Object.values(error.response.data.errors).flat()
@@ -226,6 +298,10 @@ export const useCompanies = () => {
     unassignPermissionsByUserId,
     addLoginIpByUserId,
     updateLoginIpByUserId,
-    deleteLoginIpByUserId
+    deleteLoginIpByUserId,
+    fetchApiKeySecrets,
+    apiSecrets,
+    updateWebhookUrl,
+    resetSecretKeys
   };
 };

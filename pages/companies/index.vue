@@ -7,13 +7,6 @@ const permissionStore = usePermissionStore()
 import { onMounted, ref } from "vue";
 import { useCompanies } from "@/composables/useCompanies";
 const { CompaniesList, fetchCompanies } = useCompanies();
-// const { pageNo, itemsPerPage, updateItemsPerPage, loadPage } = usePagination(
-//   fetchAgentTransactions,
-//   {
-//     initialPage: 1,
-//     initialPerPage: 50,
-//   }
-// );
 const filters = ref({});
 const headers = [
   { title: "#", key: "sr_no" },
@@ -24,33 +17,6 @@ const headers = [
   { title: "Created At", key: "created_at" },
   { title: "Action", key: "action" },
 ];
-
-function handleFilter(payload) {
-  // empty values remove (best practice)
-  filters.value = Object.fromEntries(
-    Object.entries(payload).filter(([_, v]) => v !== "" && v !== null)
-  );
-
-  // page reset
-  pageNo.value = 1;
-
-  // fetchAgentTransactions({
-  //   page: pageNo.value,
-  //   per_page: itemsPerPage.value,
-  //   ...filters.value,
-  // });
-}
-
-
-function handleReset() {
-  filters.value = {};
-  pageNo.value = 1;
-
-  // fetchAgentTransactions({
-  //   page: pageNo.value,
-  //   per_page: itemsPerPage.value,
-  // });
-}
 
 
 onMounted(() => {
@@ -116,6 +82,9 @@ onMounted(() => {
                   </VListItem>
                   <VListItem :to="`/companies/login-ip-settings/${item.id}`" v-if="permissionStore.hasPermission('company_ips.create')">
                     <VListItemTitle>Login Ip Settings</VListItemTitle>
+                  </VListItem>
+                  <VListItem :to="`/companies/api-keys-webhooks/${item.id}`" v-if="permissionStore.hasPermission('company_security.secrets.view')">
+                    <VListItemTitle>Api Keys & Webhooks</VListItemTitle>
                   </VListItem>
                 </VList>
               </VMenu>
