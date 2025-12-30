@@ -19,6 +19,7 @@ export const useCompanies = () => {
 
   const CompaniesList = ref([]);
   const CompanyDetail = ref();
+  const user_permissions = ref();
   const statuses = [
     { value: true, text: "Active" },
     { value: false, text: "Inactive" },
@@ -59,11 +60,11 @@ export const useCompanies = () => {
   };
 
   const saveCompany = async (isEdit, formData, companyId = null) => {
-     showSuccess(
-          isEdit
-            ? "Updating company...."
-            : "Creating Company...."
-        );
+    showSuccess(
+      isEdit
+        ? "Updating company...."
+        : "Creating Company...."
+    );
     try {
       const { $axios } = useNuxtApp();
       const url = isEdit ? `/companies/${companyId}` : "/companies";
@@ -97,12 +98,75 @@ export const useCompanies = () => {
     }
   };
 
+  const fetchPermissionsById = async (id) => {
+    showLoading("Fetching Permissions...");
+    try {
+      const response = await $axios.get(`/users/${id}/permissions`);
+      user_permissions.value = response.data;
+      showSuccess('Companies Permissions Fetched');
+    } catch (error) {
+      showError("Something went wrong while Fetching Permissions.");
+      console.error(error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const assignPermissionsByUserId = async (id, permissions) => {
+    showLoading("Assigning Permissions...");
+    try {
+      const response = await $axios.post(`/users/${id}/permissions`, {
+        permission_id: permissions,
+      })
+      showSuccess(response.data.message);
+    } catch (error) {
+      console.error("Error Assigning Permissions:", error);
+
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const unassignPermissionsByUserId = async (id, permissions) => {
+    showLoading("Unassigning permissions...");
+
+    try {
+      const response = await $axios.delete(`/users/${id}/permissions`, {
+        data: {
+          permission_ids: permissions,
+        },
+      });
+
+      showSuccess(response.data.message);
+    } catch (error) {
+      console.error("Error unassigning permissions:", error);
+
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+    } finally {
+      hideLoading();
+    }
+  };
+
+
   return {
     CompaniesList,
     fetchCompanies,
     statuses,
     saveCompany,
     fetchCompanyById,
-    CompanyDetail
+    CompanyDetail,
+    fetchPermissionsById,
+    user_permissions,
+    assignPermissionsByUserId,
+    unassignPermissionsByUserId
   };
 };

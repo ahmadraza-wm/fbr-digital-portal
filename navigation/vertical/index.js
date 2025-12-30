@@ -30,7 +30,7 @@ export default [
       {
         title: "Companies List",
         to: "companies",
-        permission: 'companies.view'
+        permission: 'companies.list'
       },
     ],
   },

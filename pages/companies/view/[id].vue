@@ -1,14 +1,16 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import {  onMounted, ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useCompanies } from "@/composables/useCompanies";
-const { CompanyDetail, fetchCompanyById } = useCompanies();
+const { CompanyDetail, fetchCompanyById,user_permissions,fetchPermissionsById } = useCompanies();
 const permissionStore = usePermissionStore()
 
-// definePageMeta({
-//   middleware: "auth",
-//   permission: "agents.show"
-// })
+definePageMeta({
+  middleware: "auth",
+  permission: "companies.show"
+})
+const route = useRoute();
+const userId = computed(() => CompanyDetail?.value?.user?.id ?? null)
 
 const canShowIpAction = computed(() => {
   return (
@@ -16,7 +18,6 @@ const canShowIpAction = computed(() => {
     permissionStore.hasPermission('company_ips.delete')
   )
 })
-
 
 const ipHeaders = computed(() => {
   const baseheaders = [
@@ -30,8 +31,14 @@ const ipHeaders = computed(() => {
   }
 
   return baseheaders
-})
+});
 
+
+ const permissionHeaders = [
+    { title: "#", key: "sr_no" },
+    { title: "Permission Name", key: "display_name" },
+    { title: "Group Name", key: "group_name" },
+  ]
 
 const formatDate = (date) => {
   if (!date) return '---'
@@ -46,13 +53,19 @@ const formatDate = (date) => {
   })
 }
 
-
-
-const route = useRoute();
-
 onMounted(async () => {
-  fetchCompanyById(route.params.id);
+  await fetchCompanyById(route.params.id);
 });
+
+watch(
+  () => userId.value,
+  (newUserId) => {
+    if (newUserId) {
+      fetchPermissionsById(newUserId)
+    }
+  },
+  { immediate: true }
+)
 
 </script>
 <template>
@@ -62,9 +75,6 @@ onMounted(async () => {
         <v-card-title class="border-b-sm d-flex align-center bg-primary">
           <BackNavigation color="text-white" />
           <h4 class="text-h5 py-3 text-white">Company Details</h4>
-        </v-card-title>
-        <v-card-title class="py-0 border-b-sm header_bg">
-          <h4 class="text-h5 py-5">Personal Details</h4>
         </v-card-title>
       </v-col>
     </v-row>
@@ -110,41 +120,16 @@ onMounted(async () => {
           <p class="font-weight-medium mb-0 lh-22 text-color1">{{ formatDate(CompanyDetail?.created_at) }}</p>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="12 pt-0">
-          <v-card-title class="py-0 border-b-md header_bg">
-            <h4 class="text-h5 py-5">Other Details</h4>
-          </v-card-title>
-        </v-col>
-      </v-row>
-      <v-row class="border-b-md px-5">
-        <v-col cols="6" sm="4" md="3" class="pb-1">
-          <p class="font-weight-medium text-color mb-0 lh-22">User Id</p>
-          <p class="font-weight-medium mb-0 lh-22 text-color1">{{ CompanyDetail?.user?.id || "---" }}</p>
-        </v-col>
-        <v-col cols="6" sm="4" md="3" class="pb-1">
-          <p class="font-weight-medium text-color mb-0 lh-22">Api Key</p>
-          <p class="font-weight-medium mb-0 lh-22 text-color1">{{ CompanyDetail?.api_key || "---" }}</p>
-        </v-col>
-        <v-col cols="6" sm="4" md="3" class="pb-1">
-          <p class="font-weight-medium text-color mb-0 lh-22">Api Secret</p>
-          <p class="font-weight-medium mb-0 lh-22 text-color1">{{ CompanyDetail?.api_secret || "---" }}</p>
-        </v-col>
-        <v-col cols="6" sm="4" md="3" class="pb-1">
-          <p class="font-weight-medium text-color mb-0 lh-22">Webhook Secret</p>
-          <p class="font-weight-medium mb-0 lh-22 text-color1">{{ CompanyDetail?.webhook_secret || "---" }}</p>
-        </v-col>
-      </v-row>
     </v-card-text>
   </v-card>
-  <v-card>
+  <v-card class="mb-4">
     <v-row>
       <v-col cols="12">
         <v-card-title class="border-b-sm d-flex align-center justify-space-between bg-secondary">
-          <h4 class="text-h5 py-3 text-white">Company Ip Whitelist</h4>
+          <h4 class="text-h5 py-3 text-white">Ip Whitelists</h4>
           <div class="gap-3 pt-1" v-if="permissionStore.hasPermission('company_ips.create')">
             <VBtn variant="elevated" @click="" color="primary">
-              Add Ip
+              Login Ip Settings
             </VBtn>
           </div>
         </v-card-title>
@@ -171,6 +156,34 @@ onMounted(async () => {
           <VBtn icon variant="text" v-if="permissionStore.hasPermission('company_ips.delete')">
             <VIcon icon="tabler-trash" color="error" @click=""></VIcon>
           </VBtn>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
+  <v-card v-if="permissionStore.hasPermission('user_permissions.view')">
+    <v-row>
+      <v-col cols="12">
+        <v-card-title class="border-b-sm d-flex align-center justify-space-between bg-secondary">
+          <h4 class="text-h5 py-3 text-white">Granted Permissions</h4>
+          <div class="gap-3 pt-1">
+            <VBtn variant="elevated" @click="`/companies/manage-permissions/${userId}`" color="primary">
+              Manage Permissions
+            </VBtn>
+          </div>
+        </v-card-title>
+      </v-col>
+    </v-row>
+    <v-card-text class="px-0 pb-0 pt-0">
+      <v-data-table :headers="permissionHeaders" :items="user_permissions?.assigned_permissions" item-key="name" hide-default-footer
+        class="border-t-sm border-b-sm">
+        <template #item.sr_no="{ index }">
+          {{ index + 1 }}
+        </template>
+        <template #item.display_name="{ item }">
+          <p class="font-weight-medium text-capitalize mb-0 lh-22 text-color">{{ item.display_name }}</p>
+        </template>
+        <template #item.group_name="{ item }">
+          <p class="font-weight-medium text-capitalize mb-0 lh-22 text-color">{{ item.group_name }}</p>
         </template>
       </v-data-table>
     </v-card-text>
