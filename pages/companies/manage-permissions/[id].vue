@@ -54,7 +54,7 @@ watch(
       <v-col cols="12">
         <v-card-title class="border-b-sm d-flex align-center bg-primary">
           <BackNavigation color="text-white" />
-          <h4 class="text-h5 py-3 text-white">Company Details</h4>
+          <h4 class="text-h5 py-3 text-white">Manage Permissions</h4>
         </v-card-title>
       </v-col>
     </v-row>

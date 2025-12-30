@@ -17,9 +17,9 @@ const { CompaniesList, fetchCompanies } = useCompanies();
 const filters = ref({});
 const headers = [
   { title: "#", key: "sr_no" },
-  { title: "ID", key: "id" },
   { title: "Name", key: "company_name" },
   { title: "Code", key: "company_code" },
+  { title: "Email", key: "email" },
   { title: "Status", key: "status" },
   { title: "Created At", key: "created_at" },
   { title: "Action", key: "action" },
@@ -87,6 +87,9 @@ onMounted(() => {
           </VChip>
         </div>
       </template>
+      <template #item.email="{ item }">
+        <div class="text-wrap">{{ item.user.email }}</div>
+      </template>
       <template #item.created_at="{ item }">
         <div class="text-grey">{{ new Date(item.created_at).toLocaleDateString('en-GB', {
           day: '2-digit',
@@ -98,20 +101,20 @@ onMounted(() => {
       <template #item.action="{ item }">
         <div>
           <div class="d-flex gap-1">
-            <VBtn icon variant="text" :to="`/companies/view/${item.id}`" color="medium-emphasis">
+            <VBtn icon variant="text" :to="`/companies/view/${item.id}`" color="medium-emphasis" v-if="permissionStore.hasPermission('companies.show')">
               <VIcon icon="tabler-eye" />
             </VBtn>
             <VBtn icon variant="text" color="medium-emphasis">
               <VIcon icon="tabler-dots-vertical" />
               <VMenu activator="parent">
                 <VList>
-                  <VListItem :to="`/companies/edit/${item.id}`">
+                  <VListItem :to="`/companies/edit/${item.id}`" v-if="permissionStore.hasPermission('companies.update')">
                     <VListItemTitle>Edit</VListItemTitle>
                   </VListItem>
-                  <VListItem :to="`/companies/manage-permissions/${item.id}`">
+                  <VListItem :to="`/companies/manage-permissions/${item.id}`" v-if="permissionStore.hasPermission('user_permissions.view')">
                     <VListItemTitle>Manage Permissions</VListItemTitle>
                   </VListItem>
-                  <VListItem>
+                  <VListItem :to="`/companies/login-ip-settings/${item.id}`" v-if="permissionStore.hasPermission('company_ips.create')">
                     <VListItemTitle>Login Ip Settings</VListItemTitle>
                   </VListItem>
                 </VList>

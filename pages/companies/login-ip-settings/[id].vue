@@ -1,29 +1,38 @@
 <script setup>
-import {  onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useCompanies } from "@/composables/useCompanies";
-const { CompanyDetail, fetchCompanyById,user_permissions,fetchPermissionsById } = useCompanies();
+const { CompanyDetail, fetchCompanyById, statuses, addLoginIpByUserId, updateLoginIpByUserId,deleteLoginIpByUserId } = useCompanies();
 const permissionStore = usePermissionStore()
 
 definePageMeta({
   middleware: "auth",
-  permission: "companies.show"
+  permission: "company_ips.create"
 })
 const route = useRoute();
 const userId = computed(() => CompanyDetail?.value?.user?.id ?? null)
+const isEditing = ref(null);
+const formRef = ref();
+const canShowIpAction = computed(() => {
+  return (
+    permissionStore.hasPermission('company_ips.update') ||
+    permissionStore.hasPermission('company_ips.delete')
+  )
+})
 
-const ipHeaders = [
+const ipHeaders = computed(() => {
+  const baseheaders = [
     { title: "#", key: "sr_no" },
     { title: "Ip", key: "ip_address" },
     { title: "Status", key: "is_active" },
-]
-
-
- const permissionHeaders = [
-    { title: "#", key: "sr_no" },
-    { title: "Permission Name", key: "display_name" },
-    { title: "Group Name", key: "group_name" },
   ]
+
+  if (canShowIpAction.value) {
+    baseheaders.push({ title: "Action", key: "action" })
+  }
+
+  return baseheaders
+});
 
 const formatDate = (date) => {
   if (!date) return '---'
@@ -38,19 +47,47 @@ const formatDate = (date) => {
   })
 }
 
+const formdata = ref({
+  ip_address: "",
+  is_active: "",
+})
+
+const submitForm = async () => {
+  const { valid } = await formRef.value.validate();
+
+  if (!valid) {
+    return;
+  }
+
+  const response = true;
+
+  if (isEditing.value == null) {
+    const response = await addLoginIpByUserId(route.params.id, formdata.value);
+  }
+  else {
+    const response = await updateLoginIpByUserId(route.params.id, isEditing?.value?.id, formdata.value);
+  }
+  if (response) {
+    await fetchCompanyById(route.params.id);
+    formRef.value.reset();
+    isEditing.value = null;
+  }
+}
+
+const editIp = (item) => {
+  isEditing.value = item
+  formdata.value.ip_address = item.ip_address
+  formdata.value.is_active = item.is_active
+}
+
+const deleteIp = async (item) => {
+  await deleteLoginIpByUserId(route.params.id, item?.id, formdata.value);
+  await fetchCompanyById(route.params.id);
+}
+
 onMounted(async () => {
   await fetchCompanyById(route.params.id);
 });
-
-watch(
-  () => userId.value,
-  (newUserId) => {
-    if (newUserId) {
-      fetchPermissionsById(newUserId)
-    }
-  },
-  { immediate: true }
-)
 
 </script>
 <template>
@@ -59,7 +96,7 @@ watch(
       <v-col cols="12">
         <v-card-title class="border-b-sm d-flex align-center bg-primary">
           <BackNavigation color="text-white" />
-          <h4 class="text-h5 py-3 text-white">Company Details</h4>
+          <h4 class="text-h5 py-3 text-white">Login Ip Settings</h4>
         </v-card-title>
       </v-col>
     </v-row>
@@ -111,12 +148,44 @@ watch(
     <v-row>
       <v-col cols="12">
         <v-card-title class="border-b-sm d-flex align-center justify-space-between bg-secondary">
+          <h4 class="text-h5 py-3 text-white">{{ isEditing ? 'Update' : 'Add' }} Ip</h4>
+        </v-card-title>
+      </v-col>
+    </v-row>
+    <v-card-text class="px-0 pt-0">
+      <v-row>
+        <v-col cols="12">
+          <v-card-text class="px-4 py-0">
+            <VForm ref="formRef" @submit.prevent="submitForm">
+              <VRow>
+                <VCol cols="12" md="4">
+                  <span class="fs-13 label-color">Ip<span class="text-red">*</span></span>
+                  <AppTextField placeholder="Ip" type="text" v-model="formdata.ip_address"
+                    :rules="[requiredValidator]" />
+                </VCol>
+                <VCol cols="12" md="4">
+                  <span class="fs-13 label-color">Status<span class="text-red">*</span></span>
+                  <AppAutocomplete :items="statuses" item-title="text" item-value="value" placeholder="Select status"
+                    v-model="formdata.is_active" :rules="[requiredValidator]" />
+                </VCol>
+                <VCol cols="12" md="4" class="d-flex gap-4 pt-md-8">
+                  <VBtn type="submit" variant="tonal" class="login-btn" :loading="loading">
+                    {{ !isEditing ? 'Add' : 'Update' }} Ip
+                  </VBtn>
+                  <VBtn type="reset" color="secondary" variant="elevated" @click="isEditing = null">Reset</VBtn>
+                </VCol>
+              </VRow>
+            </VForm>
+          </v-card-text>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+  <v-card class="mb-4">
+    <v-row>
+      <v-col cols="12">
+        <v-card-title class="border-b-sm d-flex align-center justify-space-between bg-secondary">
           <h4 class="text-h5 py-3 text-white">Ip Whitelists</h4>
-          <div class="gap-3 pt-1" v-if="permissionStore.hasPermission('company_ips.create')">
-            <VBtn variant="elevated" :to="`/companies/login-ip-settings/${route.params.id}`" color="primary">
-              Login Ip Settings
-            </VBtn>
-          </div>
         </v-card-title>
       </v-col>
     </v-row>
@@ -134,33 +203,13 @@ watch(
             </VChip>
           </p>
         </template>
-      </v-data-table>
-    </v-card-text>
-  </v-card>
-  <v-card v-if="permissionStore.hasPermission('user_permissions.view')">
-    <v-row>
-      <v-col cols="12">
-        <v-card-title class="border-b-sm d-flex align-center justify-space-between bg-secondary">
-          <h4 class="text-h5 py-3 text-white">Granted Permissions</h4>
-          <div class="gap-3 pt-1">
-            <VBtn variant="elevated" :to="`/companies/manage-permissions/${route.params.id}`" color="primary">
-              Manage Permissions
-            </VBtn>
-          </div>
-        </v-card-title>
-      </v-col>
-    </v-row>
-    <v-card-text class="px-0 pb-0 pt-0">
-      <v-data-table :headers="permissionHeaders" :items="user_permissions?.assigned_permissions" item-key="name" hide-default-footer
-        class="border-t-sm border-b-sm">
-        <template #item.sr_no="{ index }">
-          {{ index + 1 }}
-        </template>
-        <template #item.display_name="{ item }">
-          <p class="font-weight-medium text-capitalize mb-0 lh-22 text-color">{{ item.display_name }}</p>
-        </template>
-        <template #item.group_name="{ item }">
-          <p class="font-weight-medium text-capitalize mb-0 lh-22 text-color">{{ item.group_name }}</p>
+        <template #item.action="{ item }">
+          <VBtn icon variant="text" v-if="permissionStore.hasPermission('company_ips.update')">
+            <VIcon icon="tabler-edit" @click="editIp(item)" color="primary"></VIcon>
+          </VBtn>
+          <VBtn icon variant="text" v-if="permissionStore.hasPermission('company_ips.delete')">
+            <VIcon icon="tabler-trash" color="error" @click="deleteIp(item)"></VIcon>
+          </VBtn>
         </template>
       </v-data-table>
     </v-card-text>

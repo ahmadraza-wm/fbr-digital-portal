@@ -155,7 +155,63 @@ export const useCompanies = () => {
       hideLoading();
     }
   };
+  
+  const addLoginIpByUserId = async (id, payload) => {
+    showLoading("Adding Login Ip...");
+    try {
+      const response = await $axios.post(`/companies/${id}/ips`, payload)
+      showSuccess('Login Ip Added Successfully');
+    } catch (error) {
+      console.error("Error Adding Login Ip:", error);
 
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+      return false;
+    } finally {
+      hideLoading();
+    }
+  };
+  
+  const updateLoginIpByUserId = async (id, ipId, payload) => {
+    showLoading("Updating Login Ip...");
+    try {
+      const response = await $axios.put(`/companies/${id}/ips/${ipId}`, payload)
+      showSuccess('Login Ip Updated Successfully');
+    } catch (error) {
+      console.error("Error Updating Login Ip:", error);
+
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+      return false;
+    } finally {
+      hideLoading();
+    }
+  };
+
+   const deleteLoginIpByUserId = async (id, ipId, payload) => {
+    showLoading("Deleting Login Ip...");
+    try {
+      const response = await $axios.delete(`/companies/${id}/ips/${ipId}`)
+      showSuccess('Login Ip Deleted Successfully');
+    } catch (error) {
+      console.error("Error Deleting Login Ip:", error);
+
+      const messages = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat()
+        : error.response?.data?.message || "Something went wrong";
+
+      showError(messages);
+      return false;
+    } finally {
+      hideLoading();
+    }
+  };
 
   return {
     CompaniesList,
@@ -167,6 +223,9 @@ export const useCompanies = () => {
     fetchPermissionsById,
     user_permissions,
     assignPermissionsByUserId,
-    unassignPermissionsByUserId
+    unassignPermissionsByUserId,
+    addLoginIpByUserId,
+    updateLoginIpByUserId,
+    deleteLoginIpByUserId
   };
 };
