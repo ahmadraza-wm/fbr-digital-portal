@@ -12,7 +12,7 @@ const permissionStore = usePermissionStore()
 const userList = ref([]);
 const options = ref({
   page: 1,
-  itemsPerPage: 5,
+  itemsPerPage: 50,
   sortBy: [""],
   sortDesc: [false],
 });
@@ -108,18 +108,9 @@ onMounted(async() => {
         <span class="fs-16 pt-2">Show</span>
         <AppAutocomplete v-model="options.itemsPerPage" :items="[
           { value: -1, title: 'All' },
-          { value: 5, title: '5' },
-          { value: 10, title: '10' },
-          { value: 25, title: '25' },
           { value: 50, title: '50' },
           { value: 100, title: '100' },
         ]" style="inline-size: 6.25rem;" @update:model-value="itemsPerPage = parseInt($event, 10)" />
-      </div>
-      <div class="gap-3 pt-6" v-if="permissionStore.hasPermission('corridor.target.report.export')">
-        <VBtn variant="tonal" color="secondary" @click="exportCorridorTarget(form)">
-          <VIcon icon="tabler-upload" class="mr-1" />
-          Export.csv
-        </VBtn>
       </div>
     </VCardText>
 
