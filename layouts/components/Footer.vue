@@ -6,11 +6,11 @@
       {{ new Date().getFullYear() }}
       Designed By
         <a
-        href="https://msafriclinks.com/"
+        href=""
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary ms-1"
-      >AfricLink</a>
+      >Payout Hub</a>
     </span>
 
   

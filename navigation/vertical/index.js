@@ -34,6 +34,39 @@ export default [
       },
     ],
   },
+  {
+    title: "Banks",
+    icon: { icon: 'tabler-building-bank' },
+    children: [
+      {
+        title: "Banks List",
+        to: "banks",
+        permission: 'banks.list'
+      },
+    ],
+  },
+  {
+    title: "Wallets",
+    icon: { icon: 'tabler-wallet' },
+    children: [
+      {
+        title: "Wallets List",
+        to: "wallets",
+        permission: 'wallets.list'
+      },
+    ],
+  },
+  {
+    title: "Cash Destinations",
+    icon: { icon: 'tabler-cash' },
+    children: [
+      {
+        title: "Destinations List",
+        to: "cash-destinations",
+        permission: 'wallets.list'
+      },
+    ],
+  },
   // {
   //   title: "Customers",
   //   icon: { icon: "tabler-users-group" },
