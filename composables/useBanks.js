@@ -204,7 +204,7 @@ export const useBanks = () => {
     };
 
     const deleteBankPartner = async (bankId, partnerId) => {
-        showLoading("Deleting Partner...");
+        showLoading("Deleting Bank Partner...");
         try {
             const response = await $axios.delete(`/banks/${bankId}/partners/${partnerId}`)
             if (response.data.success) {
@@ -215,7 +215,7 @@ export const useBanks = () => {
                 showError(response.data.message);
             }
         } catch (error) {
-            console.error("Error Deleting Login Ip:", error);
+            console.error("Error Deleting Bank Partner:", error);
 
             const messages = error.response?.data?.errors
                 ? Object.values(error.response.data.errors).flat()

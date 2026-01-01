@@ -98,7 +98,7 @@ onMounted(async () => {
                     <VListItemTitle>Edit</VListItemTitle>
                   </VListItem>
                   <VListItem :to="{
-                    path: `/banks/partners/${item.id}`,
+                    path: `/banks/${item.id}/partners`,
                     query: {
                       name: item.name
                     }
