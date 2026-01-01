@@ -38,7 +38,7 @@ const headers = computed(() => {
       { title: "Address", key: "address" },
       { title: "City", key: "city_name" },
       { title: "country", key: "country" },
-      { title: "Status", key: "is_active" },
+      { title: "Status", key: "status" },
       { title: "Created At", key: "created_at" },
       { title: "Action", key: "action" },
     )
@@ -49,19 +49,6 @@ const headers = computed(() => {
 
   return baseheaders
 });
-// const headers = [
-//   { title: "#", key: "sr_no" },
-//   { title: "Name", key: "destination_name" },
-//   { title: "Code", key: "destination_code" },
-//     { title: "Anywhere", key: "anywhere" },
-
-//   { title: "Address", key: "address" },
-//   { title: "City", key: "city_name" },
-//   { title: "country", key: "country" },
-//   { title: "status", key: "is_active" },
-//   { title: "Created At", key: "created_at" },
-//   { title: "action", key: "action" },
-// ];
 
 onMounted(async () => {
   fetchCashDestinations();
@@ -101,11 +88,11 @@ onMounted(async () => {
         <template #item.country="{ item }">
           {{ item.country?.name }}
         </template>
-        <template #item.is_active="{ item }">
+        <template #item.status="{ item }">
           <div>
-            <VChip :color="item.is_active ? 'success' : 'error'" class="font-weight-light p-1" size="small"
+            <VChip :color="item.status ? 'success' : 'error'" class="font-weight-light p-1" size="small"
               variant="elevated">
-              {{ item.is_active ? 'Active' : 'Inactive' }}
+              {{ item.status ? 'Active' : 'Inactive' }}
             </VChip>
           </div>
         </template>
@@ -121,8 +108,17 @@ onMounted(async () => {
               <VIcon icon="tabler-dots-vertical" />
               <VMenu activator="parent">
                 <VList>
-                  <VListItem>
+                  <VListItem :to="`/cash-destinations/edit/${item.id}`"
+                    v-if="permissionStore.hasPermission('cash_destinations.update')">
                     <VListItemTitle>Edit</VListItemTitle>
+                  </VListItem>
+                  <VListItem :to="{
+                    path: `/cash-destinations/${item.id}/partners`,
+                    query: {
+                      name: item.destination_name
+                    }
+                  }" v-if="permissionStore.hasPermission('cash_destination_partners.view')">
+                    <VListItemTitle>Partners Code</VListItemTitle>
                   </VListItem>
                 </VList>
               </VMenu>

@@ -23,7 +23,7 @@ const headers = computed(() => {
 
   if (permissionStore.hasPermission('banks.show')) {
     baseheaders.push(
-      { title: "status", key: "is_active" },
+      { title: "status", key: "status" },
       { title: "Created At", key: "created_at" },
       { title: "Action", key: "action" }
     )
@@ -74,11 +74,11 @@ onMounted(async () => {
         <template #item.country="{ item }">
           {{ item.country?.name }}
         </template>
-        <template #item.is_active="{ item }">
+        <template #item.status="{ item }">
           <div>
-            <VChip :color="item.is_active ? 'success' : 'error'" class="font-weight-light p-1" size="small"
+            <VChip :color="item.status ? 'success' : 'error'" class="font-weight-light p-1" size="small"
               variant="elevated">
-              {{ item.is_active ? 'Active' : 'Inactive' }}
+              {{ item.status ? 'Active' : 'Inactive' }}
             </VChip>
           </div>
         </template>
