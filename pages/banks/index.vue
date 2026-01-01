@@ -12,6 +12,25 @@ const options = ref({
   sortBy: [""],
   sortDesc: [false],
 });
+
+const headers = computed(() => {
+  const baseheaders = [
+    { title: "#", key: "sr_no" },
+    { title: "Name", key: "name" },
+    { title: "Code", key: "bank_code" },
+    { title: "country", key: "country" },
+  ]
+
+  if (permissionStore.hasPermission('banks.show')) {
+    baseheaders.push(
+      { title: "status", key: "is_active" },
+      { title: "Created At", key: "created_at" },
+      { title: "Action", key: "action" }
+    )
+  }
+
+  return baseheaders
+});
 const formatDate = (date) => {
   if (!date) return '---'
 
@@ -24,15 +43,6 @@ const formatDate = (date) => {
     year: 'numeric',
   })
 }
-const headers = [
-  { title: "#", key: "sr_no" },
-  { title: "Name", key: "name" },
-  { title: "Code", key: "bank_code" },
-  { title: "country", key: "country" },
-  { title: "status", key: "is_active" },
-  { title: "Created At", key: "created_at" },
-  { title: "action", key: "action" },
-];
 
 onMounted(async () => {
   fetchBanks();
@@ -84,8 +94,16 @@ onMounted(async () => {
               <VIcon icon="tabler-dots-vertical" />
               <VMenu activator="parent">
                 <VList>
-                  <VListItem>
+                  <VListItem :to="`banks/edit/${item.id}`" v-if="permissionStore.hasPermission('bank_partners.update')">
                     <VListItemTitle>Edit</VListItemTitle>
+                  </VListItem>
+                  <VListItem :to="{
+                    path: `/banks/partners/${item.id}`,
+                    query: {
+                      name: item.name
+                    }
+                  }" v-if="permissionStore.hasPermission('bank_partners.view')">
+                    <VListItemTitle>Partners Code</VListItemTitle>
                   </VListItem>
                 </VList>
               </VMenu>

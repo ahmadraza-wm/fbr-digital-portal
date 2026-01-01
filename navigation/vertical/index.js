@@ -19,6 +19,12 @@ export default [
     permission: "countries.view"
   },
   {
+    title: "Currencies",
+    to: { name: "currencies" },
+    icon: { icon: 'tabler-currency' },
+    permission: "countries.view"
+  },
+  {
     title: "Companies",
     icon: { icon: 'tabler-building-skyscraper' },
     children: [
@@ -38,6 +44,11 @@ export default [
     title: "Banks",
     icon: { icon: 'tabler-building-bank' },
     children: [
+      {
+        title: "Create Bank",
+        to: "banks-add",
+        permission: 'banks.create'
+      },
       {
         title: "Banks List",
         to: "banks",
