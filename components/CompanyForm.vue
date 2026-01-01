@@ -75,11 +75,11 @@ const submitForm = async () => {
   <VForm ref="formRef" @submit.prevent="submitForm">
     <VRow>
       <VCol cols="12" md="6">
-        <span class="fs-13 label-color">Company Name</span>
+        <span class="fs-13 label-color">Company Name<span class="text-red">*</span></span>
         <AppTextField v-model="formData.company_name" placeholder="Company Name" :rules="[requiredValidator]"/>
       </VCol>
       <VCol cols="12" md="6">
-        <span class="fs-13 label-color">Company Code</span>
+        <span class="fs-13 label-color">Company Code<span class="text-red">*</span></span>
         <AppTextField v-model="formData.company_code" placeholder="Company Code" :rules="[requiredValidator]"/>
       </VCol>
       <VCol cols="12" md="6">
@@ -96,7 +96,7 @@ const submitForm = async () => {
           name="email_fake" autocomplete="off" />
       </VCol>
       <VCol cols="12" md="6">
-        <span class="fs-13 label-color">Password<span class="text-red">*</span></span>
+        <span class="fs-13 label-color">Password<span v-if="!props.isEdit || formData.password" class="text-red">*</span></span>
         <AppTextField v-model="formData.password" :type="showPassword ? 'text' : 'password'" placeholder="••••••••"
           name="new-password" autocomplete="new-password" :rules="!props.isEdit || formData.password ?[requiredValidator, passwordValidator]:[]"
           :append-inner-icon="showPassword ? 'tabler-eye-off' : 'tabler-eye'" @click:append-inner="togglePassword"

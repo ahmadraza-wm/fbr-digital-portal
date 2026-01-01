@@ -24,19 +24,44 @@ const formatDate = (date) => {
     year: 'numeric',
   })
 }
-const headers = [
-  { title: "#", key: "sr_no" },
-  { title: "Name", key: "destination_name" },
-  { title: "Code", key: "destination_code" },
-    { title: "Anywhere", key: "anywhere" },
+const headers = computed(() => {
+  const baseheaders = [
+    { title: "#", key: "sr_no" },
+    { title: "Name", key: "destination_name" },
+    { title: "Code", key: "destination_code" },
+  ]
 
-  { title: "Address", key: "address" },
-  { title: "City", key: "city_name" },
-  { title: "country", key: "country" },
-  { title: "status", key: "is_active" },
-  { title: "Created At", key: "created_at" },
-  { title: "action", key: "action" },
-];
+  if (permissionStore.hasPermission('cash_destinations.show')) {
+
+    baseheaders.push(
+      { title: "Anywhere", key: "anywhere" },
+      { title: "Address", key: "address" },
+      { title: "City", key: "city_name" },
+      { title: "country", key: "country" },
+      { title: "Status", key: "is_active" },
+      { title: "Created At", key: "created_at" },
+      { title: "Action", key: "action" },
+    )
+  }
+  else {
+    baseheaders.push({ title: "country", key: "country" })
+  }
+
+  return baseheaders
+});
+// const headers = [
+//   { title: "#", key: "sr_no" },
+//   { title: "Name", key: "destination_name" },
+//   { title: "Code", key: "destination_code" },
+//     { title: "Anywhere", key: "anywhere" },
+
+//   { title: "Address", key: "address" },
+//   { title: "City", key: "city_name" },
+//   { title: "country", key: "country" },
+//   { title: "status", key: "is_active" },
+//   { title: "Created At", key: "created_at" },
+//   { title: "action", key: "action" },
+// ];
 
 onMounted(async () => {
   fetchCashDestinations();

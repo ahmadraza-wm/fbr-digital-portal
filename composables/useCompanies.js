@@ -61,7 +61,7 @@ export const useCompanies = () => {
   };
 
   const saveCompany = async (isEdit, formData, companyId = null) => {
-    showSuccess(
+    showLoading(
       isEdit
         ? "Updating company...."
         : "Creating Company...."
