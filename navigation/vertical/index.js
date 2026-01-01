@@ -61,6 +61,11 @@ export default [
     icon: { icon: 'tabler-wallet' },
     children: [
       {
+        title: "Create Wallet",
+        to: "wallets-add",
+        permission: 'wallets.create'
+      },
+      {
         title: "Wallets List",
         to: "wallets",
         permission: 'wallets.list'

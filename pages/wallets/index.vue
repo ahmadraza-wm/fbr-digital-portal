@@ -92,8 +92,16 @@ onMounted(async () => {
               <VIcon icon="tabler-dots-vertical" />
               <VMenu activator="parent">
                 <VList>
-                  <VListItem>
+                  <VListItem :to="`/wallets/edit/${item.id}`" v-if="permissionStore.hasPermission('wallets.update')">
                     <VListItemTitle>Edit</VListItemTitle>
+                  </VListItem>
+                  <VListItem :to="{
+                    path: `/wallets/${item.id}/partners`,
+                    query: {
+                      name: item.name
+                    }
+                  }" v-if="permissionStore.hasPermission('wallet_partners.view')">
+                    <VListItemTitle>Partners Code</VListItemTitle>
                   </VListItem>
                 </VList>
               </VMenu>

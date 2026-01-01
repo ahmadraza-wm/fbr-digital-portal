@@ -1,5 +1,6 @@
 <script setup>
 import BackNavigation from "@/@core/components/BackNavigation.vue";
+import { useBanks } from "@/composables/useBanks";
 import useUiFeedback from "@/composables/useUiFeedback";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -7,7 +8,6 @@ definePageMeta({
   middleware: "auth",
   permission: "bank_partners.view"
 })
-import { useBanks } from "@/composables/useBanks";
 const { BanksList, fetchBankPartnersList, saveBankPartner, fetchPartnerConstants, partnerConstant, statuses, deleteBankPartner } = useBanks();
 const permissionStore = usePermissionStore()
 const router = useRouter();
@@ -107,15 +107,15 @@ const resetForm = () => {
           <BackNavigation color="tetx-white" />
           <h4 class="text-h5 py-3 text-white">Bank Partner Code</h4>
         </v-card-title>
+        <v-card-title class="border-b-sm">
+          <h4 class="text-h5 py-3">{{ isEdit ? 'Update' : 'Create' }} Partner</h4>
+        </v-card-title>
       </v-col>
     </v-row>
     <!-- Form with validation -->
     <v-form ref="formRef" v-if="permissionStore.hasPermission('bank_partners.create') || isEdit" :key="formKey">
-      <v-card-text class="pt-1 my-4 pb-3">
+      <v-card-text class="pt-4 mb-4 pb-3">
         <v-row class="ps-0">
-          <VCol cols="12" class="px-1">
-            <h4 class="text-h5 py-3">Create Partner</h4>
-          </VCol>
           <VCol cols="12" md="6">
             <AppTextField :value="bankName" label="Bank Name" placeholder="ABP" readonly />
           </VCol>
