@@ -67,24 +67,37 @@ onMounted(() => {
       <template #item.action="{ item }">
         <div>
           <div class="d-flex gap-1">
-            <VBtn icon variant="text" :to="`/companies/view/${item.id}`" color="medium-emphasis" v-if="permissionStore.hasPermission('companies.show')">
+            <VBtn icon variant="text" :to="`/companies/view/${item.id}`" color="medium-emphasis"
+              v-if="permissionStore.hasPermission('companies.show')">
               <VIcon icon="tabler-eye" />
             </VBtn>
             <VBtn icon variant="text" color="medium-emphasis">
               <VIcon icon="tabler-dots-vertical" />
               <VMenu activator="parent">
                 <VList>
-                  <VListItem :to="`/companies/edit/${item.id}`" v-if="permissionStore.hasPermission('companies.update')">
+                  <VListItem :to="`/companies/edit/${item.id}`"
+                    v-if="permissionStore.hasPermission('companies.update')">
                     <VListItemTitle>Edit</VListItemTitle>
                   </VListItem>
-                  <VListItem :to="`/companies/manage-permissions/${item.id}`" v-if="permissionStore.hasPermission('user_permissions.view')">
+                  <VListItem :to="`/companies/manage-permissions/${item.id}`"
+                    v-if="permissionStore.hasPermission('user_permissions.view')">
                     <VListItemTitle>Manage Permissions</VListItemTitle>
                   </VListItem>
-                  <VListItem :to="`/companies/login-ip-settings/${item.id}`" v-if="permissionStore.hasPermission('company_ips.create')">
+                  <VListItem :to="`/companies/login-ip-settings/${item.id}`"
+                    v-if="permissionStore.hasPermission('company_ips.create')">
                     <VListItemTitle>Login Ip Settings</VListItemTitle>
                   </VListItem>
-                  <VListItem :to="`/companies/api-keys-webhooks/${item.id}`" v-if="permissionStore.hasPermission('company_security.secrets.view')">
+                  <VListItem :to="`/companies/api-keys-webhooks/${item.id}`"
+                    v-if="permissionStore.hasPermission('company_security.secrets.view')">
                     <VListItemTitle>Api Keys & Webhooks</VListItemTitle>
+                  </VListItem>
+                  <VListItem :to="{
+                    path: `/companies/${item.id}/partner-mappings`,
+                    query: {
+                      name: item.company_name
+                    }
+                  }" v-if="permissionStore.hasPermission('company_partner_mappings.show_by_company')">
+                    <VListItemTitle>Partner Mappings</VListItemTitle>
                   </VListItem>
                 </VList>
               </VMenu>

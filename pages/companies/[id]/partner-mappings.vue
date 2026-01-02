@@ -1,38 +1,26 @@
 <script setup>
 import BackNavigation from "@/@core/components/BackNavigation.vue";
-import { useBanks } from "@/composables/useBanks";
-import { useWallets } from "@/composables/useWallets";
-import useUiFeedback from "@/composables/useUiFeedback";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 definePageMeta({
   middleware: "auth",
-  permission: "wallet_partners.view"
+  permission: "company_partner_mappings.show_by_company"
 })
-const { fetchPartnerConstants, partnerConstant } = useBanks();
-const {WalletsList,fetchWalletPartnersList,saveWalletPartner,statuses,deleteWalletPartner} = useWallets();
+import { usePartnerMappings } from "@/composables/UsePartnerMappings";
+const { PartnersMapList, fetchPartnersMapList, deleteCompanyPartnerMap, statuses, saveCompanyPartnerMap } = usePartnerMappings();
+import { usePartners } from "@/composables/usePartners";
+const { fetchPartners, PartnersList } = usePartners();
 const permissionStore = usePermissionStore()
-const router = useRouter();
 const route = useRoute();
 
-const {
-  loading,
-  showLoading,
-  hideLoading,
-  showSuccess,
-  showError,
-  confirmAction,
-} = useUiFeedback();
-
 const form = ref({
-  wallet_id: route.params.id,
-  integration_method: '',
-  reference_code: '',
+  company_id: route.params.id,
+  partner_id: null,
+  receiving_methods: [],
   status: true,
 })
 
-
-const walletName = ref(route.query.name);
+const CompanyName = ref(route.query.name);
 
 const isEdit = ref(false);
 const editingItemId = ref(null);
@@ -40,11 +28,11 @@ const formRef = ref(null);
 const formKey = ref(0)
 
 onMounted(async () => {
-  await fetchWalletPartnersList(route.params.id)
-  await fetchPartnerConstants();
+  await fetchPartnersMapList(route.params.id)
+  fetchPartners();
 });
 const deletePartner = async (partnerId) => {
-  await deleteWalletPartner(route.params.id, partnerId);
+  await deleteCompanyPartnerMap(route.params.id, partnerId);
 };
 const options = ref({
   page: 1,
@@ -56,18 +44,34 @@ const options = ref({
 const editPartner = (item) => {
   isEdit.value = true;
   editingItemId.value = item.id;
-  form.value.integration_method = item.integration_method;
-  form.value.reference_code = item.reference_code;
+  form.value.partner_id = item.partner.id;
+  form.value.receiving_methods = item.receiving_methods;
   form.value.status = item.status;
 };
 const headers = ref([
   { title: "#", key: "sr_no" },
-  { title: "Partner Name", key: "integration_method" },
-  { title: "Reference Code", key: "reference_code" },
+  { title: "Partner Name", key: "partner" },
+  { title: "Receiving Methods", key: "receiving_methods" },
   { title: "Status", key: "status" },
   { title: "Created At", key: "created_at" },
   { title: "Action", key: "action" },
 ]);
+
+const selectedPartner = computed(() => {
+  return PartnersList.value.find(
+    partner => partner.id === form.value.partner_id
+  )
+})
+
+const receivingMethodsList = computed(() => {
+  return selectedPartner.value?.receiving_methods || []
+})
+
+watch(() => form.value.partner_id, () => {
+  if (!isEdit.value) {
+    form.value.receiving_methods = []
+  }
+})
 
 const handleSubmit = async () => {
   const { valid } = await formRef.value.validate();
@@ -75,7 +79,7 @@ const handleSubmit = async () => {
   if (!valid) {
     return;
   }
-  const isSaved = await saveWalletPartner(isEdit.value, form.value, route.params.id, editingItemId.value);
+  const isSaved = await saveCompanyPartnerMap(isEdit.value, form.value, route.params.id, editingItemId.value);
   if (isSaved) {
     resetForm();
   }
@@ -86,9 +90,9 @@ const resetForm = () => {
   editingItemId.value = null;
 
   form.value = {
-    wallet_id: route.params.id,
-    integration_method: '',
-    reference_code: '',
+    company_id: route.params.id,
+    partner_id: null,
+    receiving_methods: [],
     status: true,
   };
 
@@ -104,28 +108,30 @@ const resetForm = () => {
       <v-col cols="12">
         <v-card-title class="d-flex align-center bg-primary">
           <BackNavigation color="tetx-white" />
-          <h4 class="text-h5 py-3 text-white">Wallet Partner Code</h4>
+          <h4 class="text-h5 py-3 text-white">Company Partner Mappings</h4>
         </v-card-title>
-        <v-card-title class="border-b-sm" v-if="permissionStore.hasPermission('wallet_partners.create') || isEdit">
-          <h4 class="text-h5 py-3">{{ isEdit ? 'Update' : 'Create' }} Partner</h4>
+        <v-card-title class="border-b-sm" v-if="permissionStore.hasPermission('company_partner_mappings.create') || isEdit">
+          <h4 class="text-h5 py-3">{{ isEdit ? 'Update' : 'Create' }} Partner Mapping</h4>
         </v-card-title>
       </v-col>
     </v-row>
     <!-- Form with validation -->
-    <v-form ref="formRef" v-if="permissionStore.hasPermission('wallet_partners.create') || isEdit" :key="formKey">
+    <v-form ref="formRef" v-if="permissionStore.hasPermission('company_partner_mappings.create') || isEdit" :key="formKey">
       <v-card-text class="pt-4 mb-4 pb-3">
         <v-row class="ps-0">
           <VCol cols="12" md="6">
-            <AppTextField :value="walletName" label="Wallet Name" placeholder="ABP" readonly />
+            <AppTextField :value="CompanyName" label="Company Name" placeholder="ABP" readonly />
           </VCol>
           <VCol cols="12" md="6">
             <span class="fs-13 label-color" v-html="requiredLabel('Partner')"></span>
-            <AppAutocomplete v-model="form.integration_method" :items="partnerConstant?.integration_methods"
-              placeholder="Select Integration Method" :rules="[requiredValidator]" />
+            <AppAutocomplete v-model="form.partner_id" :items="PartnersList" item-title="name" item-value="id"
+              placeholder="Select Partner" :rules="[requiredValidator]" />
           </VCol>
           <VCol cols="12" md="6">
-            <span class="fs-13 label-color" v-html="requiredLabel('Refrence Code')"></span>
-            <AppTextField v-model="form.reference_code" placeholder="466899" :rules="[requiredValidator]" />
+            <span class="fs-13 label-color" v-html="requiredLabel('Receiving Methods')"></span>
+            <AppAutocomplete v-model="form.receiving_methods" :items="receivingMethodsList"
+              placeholder="Select Receiving Method" :rules="[requiredValidator]" chips multiple closable-chips
+              :disabled="!form.partner_id" />
           </VCol>
           <VCol cols="12" md="6" v-if="isEdit">
             <span class="fs-13 label-color">Status<span class="text-red">*</span></span>
@@ -134,7 +140,7 @@ const resetForm = () => {
           </VCol>
           <VCol :class="['d-flex gap-2', isEdit ? 'justify-end' : 'pt-md-9 justify-start']">
             <VBtn type="button" class="login-btn" variant="tonal" @click="handleSubmit" :loading="loading">
-              {{ isEdit ? "Update Partner Code" : "Create Partner Code" }}
+              {{ isEdit ? "Update" : "Create" }} Partner Mapping
             </VBtn>
             <VBtn type="reset" variant="tonal" color="secondary" @click="resetForm">Reset</VBtn>
           </VCol>
@@ -143,7 +149,7 @@ const resetForm = () => {
     </v-form>
     <v-divider></v-divider>
     <VCardText class="d-flex flex-wrap gap-4 py-4 bg-secondary">
-      <h4 class="text-h5 py-1 text-white">Partner Code List</h4>
+      <h4 class="text-h5 py-1 text-white">Partners Mapping List</h4>
     </VCardText>
 
     <VCardText class="flex-wrap gap-4 d-flex justify-space-between align-center border-t-sm">
@@ -157,10 +163,18 @@ const resetForm = () => {
       </div>
     </VCardText>
     <VCardText class="px-0">
-      <PaginatedDataTable :headers="headers" :items="WalletsList" :options="options" :loading="loading" :search="search"
-        @update:options="options = $event">
-        <template #item.integration_method="{ item }">
-          <span class="text-capitalize">{{ item.integration_method }}</span>
+      <PaginatedDataTable :headers="headers" :items="PartnersMapList" :options="options" :loading="loading"
+        :search="search" @update:options="options = $event">
+        <template #item.partner="{ item }">
+          <span class="text-capitalize">{{ item.partner.name }}</span>
+        </template>
+        <template #item.receiving_methods="{ item }">
+          <div v-if="item?.receiving_methods?.length">
+            <VChip v-for="(method, index) in item.receiving_methods" :key="index" class="me-1 text-capitalize"
+              color="primary" size="small">
+              {{ method }}
+            </VChip>
+          </div>
         </template>
         <template #item.status="{ item }">
           <div>
@@ -176,11 +190,11 @@ const resetForm = () => {
         <!-- Actions -->
         <template #item.action="{ item }">
           <div class="d-flex gap-1">
-            <IconBtn @click="editPartner(item)" v-if="permissionStore.hasPermission('wallet_partners.update')">
+            <IconBtn @click="editPartner(item)" v-if="permissionStore.hasPermission('company_partner_mappings.update')">
               <VIcon icon="tabler-edit" color="primary" />
             </IconBtn>
 
-            <IconBtn @click="deletePartner(item.id)" v-if="permissionStore.hasPermission('wallet_partners.delete')">
+            <IconBtn @click="deletePartner(item.id)" v-if="permissionStore.hasPermission('company_partner_mappings.delete')">
               <VIcon icon="tabler-trash" color="error" />
             </IconBtn>
           </div>
@@ -192,11 +206,11 @@ const resetForm = () => {
                 Showing
                 {{ (options.page - 1) * options.itemsPerPage + 1 }}
                 to
-                {{ Math.min(options.page * options.itemsPerPage, WalletsList.length) }}
-                of {{ WalletsList.length }} entries
+                {{ Math.min(options.page * options.itemsPerPage, PartnersMapList.length) }}
+                of {{ PartnersMapList.length }} entries
               </span>
               <VPagination v-model="options.page" :total-visible="$vuetify.display.smAndDown ? 3 : 5"
-                :length="Math.ceil(WalletsList.length / options.itemsPerPage)" />
+                :length="Math.ceil(PartnersMapList.length / options.itemsPerPage)" />
             </div>
           </VCardText>
         </template>

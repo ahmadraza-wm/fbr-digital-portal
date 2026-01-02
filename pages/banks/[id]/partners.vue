@@ -30,11 +30,7 @@ const form = ref({
 })
 
 
-const bankId = ref(route.params.id);
 const bankName = ref(route.query.name);
-const selectedMethod = ref(null);
-const refrenceCode = ref("");
-
 const isEdit = ref(false);
 const editingItemId = ref(null);
 const formRef = ref(null);
@@ -107,7 +103,7 @@ const resetForm = () => {
           <BackNavigation color="tetx-white" />
           <h4 class="text-h5 py-3 text-white">Bank Partner Code</h4>
         </v-card-title>
-        <v-card-title class="border-b-sm">
+        <v-card-title class="border-b-sm" v-if="permissionStore.hasPermission('bank_partners.create') || isEdit">
           <h4 class="text-h5 py-3">{{ isEdit ? 'Update' : 'Create' }} Partner</h4>
         </v-card-title>
       </v-col>

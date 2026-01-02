@@ -32,10 +32,7 @@ const form = ref({
 })
 
 
-const bankId = ref(route.params.id);
-const bankName = ref(route.query.name);
-const selectedMethod = ref(null);
-const refrenceCode = ref("");
+const DestinationName = ref(route.query.name);
 
 const isEdit = ref(false);
 const editingItemId = ref(null);
@@ -109,17 +106,17 @@ const resetForm = () => {
           <BackNavigation color="tetx-white" />
           <h4 class="text-h5 py-3 text-white">Cash Destination Code</h4>
         </v-card-title>
-        <v-card-title class="border-b-sm">
+        <v-card-title class="border-b-sm" v-if="permissionStore.hasPermission('cash_destination_partners.create') || isEdit">
           <h4 class="text-h5 py-3">{{ isEdit ? 'Update' : 'Create' }} Partner</h4>
         </v-card-title>
       </v-col>
     </v-row>
     <!-- Form with validation -->
-    <v-form ref="formRef" v-if="permissionStore.hasPermission('bank_partners.create') || isEdit" :key="formKey">
+    <v-form ref="formRef" v-if="permissionStore.hasPermission('cash_destination_partners.create') || isEdit" :key="formKey">
       <v-card-text class="pt-4 mb-4 pb-3">
         <v-row class="ps-0">
           <VCol cols="12" md="6">
-            <AppTextField :value="bankName" label="Cash Destination Name" placeholder="ABP" readonly />
+            <AppTextField :value="DestinationName" label="Cash Destination Name" placeholder="ABP" readonly />
           </VCol>
           <VCol cols="12" md="6">
             <span class="fs-13 label-color" v-html="requiredLabel('Partner')"></span>
