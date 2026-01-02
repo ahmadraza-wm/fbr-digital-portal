@@ -101,7 +101,8 @@ onMounted(async () => {
         </template>
         <template #item.action="{ item }">
           <div class="d-flex gap-1">
-            <VBtn icon variant="text" to="" color="medium-emphasis">
+            <VBtn icon variant="text" :to="`/cash-destinations/view/${item.id}`" color="medium-emphasis"
+              v-if="permissionStore.hasPermission('cash_destinations.show')">
               <VIcon icon="tabler-eye" />
             </VBtn>
             <VBtn icon variant="text" color="medium-emphasis">
@@ -118,7 +119,7 @@ onMounted(async () => {
                       name: item.destination_name
                     }
                   }" v-if="permissionStore.hasPermission('cash_destination_partners.view')">
-                    <VListItemTitle>Partners Code</VListItemTitle>
+                    <VListItemTitle>Destination Code</VListItemTitle>
                   </VListItem>
                 </VList>
               </VMenu>

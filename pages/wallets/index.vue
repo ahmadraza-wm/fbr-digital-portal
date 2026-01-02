@@ -85,7 +85,7 @@ onMounted(async () => {
         </template>
         <template #item.action="{ item }">
           <div class="d-flex gap-1">
-            <VBtn icon variant="text" to="" color="medium-emphasis">
+            <VBtn icon variant="text" :to="`/wallets/view/${item.id}`" color="medium-emphasis" v-if="permissionStore.hasPermission('wallets.show')">
               <VIcon icon="tabler-eye" />
             </VBtn>
             <VBtn icon variant="text" color="medium-emphasis">

@@ -134,7 +134,7 @@ const resetForm = () => {
               placeholder="Select Status" :rules="[requiredValidator]" />
           </VCol>
           <VCol :class="['d-flex gap-2', isEdit ? 'justify-end' : 'pt-md-9 justify-start']">
-            <VBtn type="button" class="login-btn" @click="handleSubmit" :loading="loading">
+            <VBtn type="button" class="login-btn" variant="tonal" @click="handleSubmit" :loading="loading">
               {{ isEdit ? "Update Partner Code" : "Create Partner Code" }}
             </VBtn>
             <VBtn type="reset" variant="tonal" color="secondary" @click="resetForm">Reset</VBtn>

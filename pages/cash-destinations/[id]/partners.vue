@@ -136,7 +136,7 @@ const resetForm = () => {
               placeholder="Select Status" :rules="[requiredValidator]" />
           </VCol>
           <VCol :class="['d-flex gap-2', isEdit ? 'justify-end' : 'pt-md-9 justify-start']">
-            <VBtn type="button" class="login-btn" @click="handleSubmit" :loading="loading">
+            <VBtn type="button" class="login-btn" variant="tonal" @click="handleSubmit" :loading="loading">
               {{ isEdit ? "Update Destination Code" : "Create Destination Code" }}
             </VBtn>
             <VBtn type="reset" variant="tonal" color="secondary" @click="resetForm">Reset</VBtn>
@@ -146,7 +146,7 @@ const resetForm = () => {
     </v-form>
     <v-divider></v-divider>
     <VCardText class="d-flex flex-wrap gap-4 py-4 bg-secondary">
-      <h4 class="text-h5 py-1 text-white">Partner Code List</h4>
+      <h4 class="text-h5 py-1 text-white">Destination Code List</h4>
     </VCardText>
 
     <VCardText class="flex-wrap gap-4 d-flex justify-space-between align-center border-t-sm">
