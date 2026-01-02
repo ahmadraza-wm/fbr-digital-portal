@@ -1,8 +1,8 @@
 <script setup>
-import {  onMounted, ref, watch, computed } from "vue";
-import { useRoute } from "vue-router";
 import { useCompanies } from "@/composables/useCompanies";
-const { CompanyDetail, fetchCompanyById,user_permissions,fetchPermissionsById } = useCompanies();
+import { computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+const { CompanyDetail, fetchCompanyById, user_permissions, fetchPermissionsById } = useCompanies();
 const permissionStore = usePermissionStore()
 
 definePageMeta({
@@ -13,17 +13,17 @@ const route = useRoute();
 const userId = computed(() => CompanyDetail?.value?.user?.id ?? null)
 
 const ipHeaders = [
-    { title: "#", key: "sr_no" },
-    { title: "Ip", key: "ip_address" },
-    { title: "Status", key: "is_active" },
+  { title: "#", key: "sr_no" },
+  { title: "Ip", key: "ip_address" },
+  { title: "Status", key: "status" },
 ]
 
 
- const permissionHeaders = [
-    { title: "#", key: "sr_no" },
-    { title: "Permission Name", key: "display_name" },
-    { title: "Group Name", key: "group_name" },
-  ]
+const permissionHeaders = [
+  { title: "#", key: "sr_no" },
+  { title: "Permission Name", key: "display_name" },
+  { title: "Group Name", key: "group_name" },
+]
 
 const formatDate = (date) => {
   if (!date) return '---'
@@ -126,11 +126,11 @@ watch(
         <template #item.sr_no="{ index }">
           {{ index + 1 }}
         </template>
-        <template #item.is_active="{ item }">
+        <template #item.status="{ item }">
           <p class="font-weight-medium mb-0 lh-22 text-color1">
-            <VChip :color="item?.is_active == 1 ? 'success' : 'error'" class="font-weight-light fs-12 p-1" size="small"
+            <VChip :color="item?.status == 1 ? 'success' : 'error'" class="font-weight-light fs-12 p-1" size="small"
               variant="elevated">
-              {{ item?.is_active === true ? "Active" : "Inactive" }}
+              {{ item?.status === true ? "Active" : "Inactive" }}
             </VChip>
           </p>
         </template>
@@ -151,8 +151,8 @@ watch(
       </v-col>
     </v-row>
     <v-card-text class="px-0 pb-0 pt-0">
-      <v-data-table :headers="permissionHeaders" :items="user_permissions?.assigned_permissions" item-key="name" hide-default-footer
-        class="border-t-sm border-b-sm">
+      <v-data-table :headers="permissionHeaders" :items="user_permissions?.assigned_permissions" item-key="name"
+        hide-default-footer class="border-t-sm border-b-sm">
         <template #item.sr_no="{ index }">
           {{ index + 1 }}
         </template>

@@ -22,7 +22,7 @@ const headers = computed(() => {
   ]
 
   if (permissionStore.hasPermission('wallets.show')) {
-    baseheaders.push({ title: "status", key: "is_active" },
+    baseheaders.push({ title: "status", key: "status" },
       { title: "Created At", key: "created_at" },
       { title: "Action", key: "action" })
   }
@@ -72,11 +72,11 @@ onMounted(async () => {
         <template #item.country="{ item }">
           {{ item.country?.name }}
         </template>
-        <template #item.is_active="{ item }">
+        <template #item.status="{ item }">
           <div>
-            <VChip :color="item.is_active ? 'success' : 'error'" class="font-weight-light p-1" size="small"
+            <VChip :color="item.status ? 'success' : 'error'" class="font-weight-light p-1" size="small"
               variant="elevated">
-              {{ item.is_active ? 'Active' : 'Inactive' }}
+              {{ item.status ? 'Active' : 'Inactive' }}
             </VChip>
           </div>
         </template>
@@ -85,7 +85,7 @@ onMounted(async () => {
         </template>
         <template #item.action="{ item }">
           <div class="d-flex gap-1">
-            <VBtn icon variant="text" to="" color="medium-emphasis">
+            <VBtn icon variant="text" :to="`/wallets/view/${item.id}`" color="medium-emphasis" v-if="permissionStore.hasPermission('wallets.show')">
               <VIcon icon="tabler-eye" />
             </VBtn>
             <VBtn icon variant="text" color="medium-emphasis">

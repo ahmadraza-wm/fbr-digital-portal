@@ -1,16 +1,16 @@
 <script setup>
 import BackNavigation from "@/@core/components/BackNavigation.vue";
 import { useBanks } from "@/composables/useBanks";
-import { useWallets } from "@/composables/useWallets";
+import { useCashDestinations } from "@/composables/useCashDestinations";
 import useUiFeedback from "@/composables/useUiFeedback";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 definePageMeta({
   middleware: "auth",
-  permission: "wallet_partners.view"
+  permission: "cash_destination_partners.view"
 })
 const { fetchPartnerConstants, partnerConstant } = useBanks();
-const {WalletsList,fetchWalletPartnersList,saveWalletPartner,statuses,deleteWalletPartner} = useWallets();
+const { CashDestinationsList,fetchDestinationPartnersList,saveDestinationPartner,deleteDestinationPartner,statuses } = useCashDestinations();
 const permissionStore = usePermissionStore()
 const router = useRouter();
 const route = useRoute();
@@ -25,7 +25,7 @@ const {
 } = useUiFeedback();
 
 const form = ref({
-  wallet_id: route.params.id,
+  cash_destination_id: route.params.id,
   integration_method: '',
   reference_code: '',
   status: true,
@@ -43,11 +43,11 @@ const formRef = ref(null);
 const formKey = ref(0)
 
 onMounted(async () => {
-  await fetchWalletPartnersList(route.params.id)
+  await fetchDestinationPartnersList(route.params.id)
   await fetchPartnerConstants();
 });
 const deletePartner = async (partnerId) => {
-  await deleteWalletPartner(route.params.id, partnerId);
+  await deleteDestinationPartner(route.params.id, partnerId);
 };
 const options = ref({
   page: 1,
@@ -78,7 +78,7 @@ const handleSubmit = async () => {
   if (!valid) {
     return;
   }
-  const isSaved = await saveWalletPartner(isEdit.value, form.value, route.params.id, editingItemId.value);
+  const isSaved = await saveDestinationPartner(isEdit.value, form.value, route.params.id, editingItemId.value);
   if (isSaved) {
     resetForm();
   }
@@ -89,7 +89,7 @@ const resetForm = () => {
   editingItemId.value = null;
 
   form.value = {
-    wallet_id: route.params.id,
+    cash_destination_id: route.params.id,
     integration_method: '',
     reference_code: '',
     status: true,
@@ -107,7 +107,7 @@ const resetForm = () => {
       <v-col cols="12">
         <v-card-title class="d-flex align-center bg-primary">
           <BackNavigation color="tetx-white" />
-          <h4 class="text-h5 py-3 text-white">Wallet Partner Code</h4>
+          <h4 class="text-h5 py-3 text-white">Cash Destination Code</h4>
         </v-card-title>
         <v-card-title class="border-b-sm">
           <h4 class="text-h5 py-3">{{ isEdit ? 'Update' : 'Create' }} Partner</h4>
@@ -115,11 +115,11 @@ const resetForm = () => {
       </v-col>
     </v-row>
     <!-- Form with validation -->
-    <v-form ref="formRef" v-if="permissionStore.hasPermission('wallet_partners.create') || isEdit" :key="formKey">
+    <v-form ref="formRef" v-if="permissionStore.hasPermission('bank_partners.create') || isEdit" :key="formKey">
       <v-card-text class="pt-4 mb-4 pb-3">
         <v-row class="ps-0">
           <VCol cols="12" md="6">
-            <AppTextField :value="bankName" label="Wallet Name" placeholder="ABP" readonly />
+            <AppTextField :value="bankName" label="Cash Destination Name" placeholder="ABP" readonly />
           </VCol>
           <VCol cols="12" md="6">
             <span class="fs-13 label-color" v-html="requiredLabel('Partner')"></span>
@@ -137,7 +137,7 @@ const resetForm = () => {
           </VCol>
           <VCol :class="['d-flex gap-2', isEdit ? 'justify-end' : 'pt-md-9 justify-start']">
             <VBtn type="button" class="login-btn" variant="tonal" @click="handleSubmit" :loading="loading">
-              {{ isEdit ? "Update Partner Code" : "Create Partner Code" }}
+              {{ isEdit ? "Update Destination Code" : "Create Destination Code" }}
             </VBtn>
             <VBtn type="reset" variant="tonal" color="secondary" @click="resetForm">Reset</VBtn>
           </VCol>
@@ -146,7 +146,7 @@ const resetForm = () => {
     </v-form>
     <v-divider></v-divider>
     <VCardText class="d-flex flex-wrap gap-4 py-4 bg-secondary">
-      <h4 class="text-h5 py-1 text-white">Partner Code List</h4>
+      <h4 class="text-h5 py-1 text-white">Destination Code List</h4>
     </VCardText>
 
     <VCardText class="flex-wrap gap-4 d-flex justify-space-between align-center border-t-sm">
@@ -160,7 +160,7 @@ const resetForm = () => {
       </div>
     </VCardText>
     <VCardText class="px-0">
-      <PaginatedDataTable :headers="headers" :items="WalletsList" :options="options" :loading="loading" :search="search"
+      <PaginatedDataTable :headers="headers" :items="CashDestinationsList" :options="options" :loading="loading" :search="search"
         @update:options="options = $event">
         <template #item.integration_method="{ item }">
           <span class="text-capitalize">{{ item.integration_method }}</span>
@@ -179,11 +179,11 @@ const resetForm = () => {
         <!-- Actions -->
         <template #item.action="{ item }">
           <div class="d-flex gap-1">
-            <IconBtn @click="editPartner(item)" v-if="permissionStore.hasPermission('wallet_partners.update')">
+            <IconBtn @click="editPartner(item)" v-if="permissionStore.hasPermission('cash_destination_partners.update')">
               <VIcon icon="tabler-edit" color="primary" />
             </IconBtn>
 
-            <IconBtn @click="deletePartner(item.id)" v-if="permissionStore.hasPermission('wallet_partners.delete')">
+            <IconBtn @click="deletePartner(item.id)" v-if="permissionStore.hasPermission('cash_destination_partners.delete')">
               <VIcon icon="tabler-trash" color="error" />
             </IconBtn>
           </div>
@@ -195,11 +195,11 @@ const resetForm = () => {
                 Showing
                 {{ (options.page - 1) * options.itemsPerPage + 1 }}
                 to
-                {{ Math.min(options.page * options.itemsPerPage, WalletsList.length) }}
-                of {{ WalletsList.length }} entries
+                {{ Math.min(options.page * options.itemsPerPage, CashDestinationsList.length) }}
+                of {{ CashDestinationsList.length }} entries
               </span>
               <VPagination v-model="options.page" :total-visible="$vuetify.display.smAndDown ? 3 : 5"
-                :length="Math.ceil(WalletsList.length / options.itemsPerPage)" />
+                :length="Math.ceil(CashDestinationsList.length / options.itemsPerPage)" />
             </div>
           </VCardText>
         </template>

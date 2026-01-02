@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, ref, watch, computed } from "vue";
-import { useRoute } from "vue-router";
 import { useCompanies } from "@/composables/useCompanies";
-const { CompanyDetail, fetchCompanyById, statuses, addLoginIpByUserId, updateLoginIpByUserId,deleteLoginIpByUserId } = useCompanies();
+import { computed, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+const { CompanyDetail, fetchCompanyById, statuses, addLoginIpByUserId, updateLoginIpByUserId, deleteLoginIpByUserId } = useCompanies();
 const permissionStore = usePermissionStore()
 
 definePageMeta({
@@ -24,7 +24,7 @@ const ipHeaders = computed(() => {
   const baseheaders = [
     { title: "#", key: "sr_no" },
     { title: "Ip", key: "ip_address" },
-    { title: "Status", key: "is_active" },
+    { title: "Status", key: "status" },
   ]
 
   if (canShowIpAction.value) {
@@ -49,7 +49,7 @@ const formatDate = (date) => {
 
 const formdata = ref({
   ip_address: "",
-  is_active: "",
+  status: "",
 })
 
 const submitForm = async () => {
@@ -77,7 +77,7 @@ const submitForm = async () => {
 const editIp = (item) => {
   isEditing.value = item
   formdata.value.ip_address = item.ip_address
-  formdata.value.is_active = item.is_active
+  formdata.value.status = item.status
 }
 
 const deleteIp = async (item) => {
@@ -166,7 +166,7 @@ onMounted(async () => {
                 <VCol cols="12" md="4">
                   <span class="fs-13 label-color">Status<span class="text-red">*</span></span>
                   <AppAutocomplete :items="statuses" item-title="text" item-value="value" placeholder="Select status"
-                    v-model="formdata.is_active" :rules="[requiredValidator]" />
+                    v-model="formdata.status" :rules="[requiredValidator]" />
                 </VCol>
                 <VCol cols="12" md="4" class="d-flex gap-4 pt-md-8">
                   <VBtn type="submit" variant="tonal" class="login-btn" :loading="loading">
@@ -195,11 +195,11 @@ onMounted(async () => {
         <template #item.sr_no="{ index }">
           {{ index + 1 }}
         </template>
-        <template #item.is_active="{ item }">
+        <template #item.status="{ item }">
           <p class="font-weight-medium mb-0 lh-22 text-color1">
-            <VChip :color="item?.is_active == 1 ? 'success' : 'error'" class="font-weight-light fs-12 p-1" size="small"
+            <VChip :color="item?.status == 1 ? 'success' : 'error'" class="font-weight-light fs-12 p-1" size="small"
               variant="elevated">
-              {{ item?.is_active === true ? "Active" : "Inactive" }}
+              {{ item?.status === true ? "Active" : "Inactive" }}
             </VChip>
           </p>
         </template>

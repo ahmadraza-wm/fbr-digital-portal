@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { useBanks } from "@/composables/useBanks";
 import { useCountries } from "@/composables/useCountries";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 const { fetchCountries, CountriesList } = useCountries();
 const props = defineProps({ isEdit: Boolean });
 const formRef = ref('')
@@ -10,17 +10,17 @@ const formData = ref({
   name: "",
   country_id: null,
   bank_code: "",
-  is_active: null,
+  status: null,
 });
 const route = useRoute();
-const { statuses, saveBank, bankDetail, loading,fetchBankDetailsById } = useBanks();
+const { statuses, saveBank, bankDetail, loading, fetchBankDetailsById } = useBanks();
 
 const setForm = () => {
   formData.value = {
     name: bankDetail?.value?.name,
     country_id: bankDetail?.value?.country.id,
     bank_code: bankDetail?.value?.bank_code,
-    is_active: bankDetail?.value?.is_active,
+    status: bankDetail?.value?.status,
   };
 }
 
@@ -37,7 +37,7 @@ const resetForm = () => {
       name: "",
       country_id: null,
       bank_code: "",
-      is_active: null,
+      status: null,
     }
   }
 }
@@ -78,7 +78,7 @@ const submitForm = async () => {
       </VCol>
       <VCol cols="12" md="6" v-if="isEdit">
         <span class="fs-13 label-color">Status<span class="text-red">*</span></span>
-        <AppAutocomplete v-model="formData.is_active" :items="statuses" item-title="text" item-value="value"
+        <AppAutocomplete v-model="formData.status" :items="statuses" item-title="text" item-value="value"
           placeholder="Select Status" :rules="[requiredValidator]" />
       </VCol>
       <VCol cols="12" class="d-flex gap-4 justify-end">

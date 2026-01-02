@@ -77,6 +77,11 @@ export default [
     icon: { icon: 'tabler-cash' },
     children: [
       {
+        title: "Create Destination",
+        to: "cash-destinations-add",
+        permission: 'cash_destinations.create'
+      },
+      {
         title: "Destinations List",
         to: "cash-destinations",
         permission: 'wallets.list'
