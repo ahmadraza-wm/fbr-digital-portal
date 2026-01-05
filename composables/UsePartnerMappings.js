@@ -15,6 +15,8 @@ export const usePartnerMappings = () => {
     } = useUiFeedback();
 
     const PartnersMapList = ref([]);
+    const CredentialsList = ref([]);
+    const CredentialsDetails = ref({});
     const statuses = [
         { value: true, text: "Active" },
         { value: false, text: "Inactive" },
@@ -27,7 +29,7 @@ export const usePartnerMappings = () => {
     }[status] || { color: "info", text: "Unknown" });
 
     const fetchPartnersMapList = async (id) => {
-        showLoading("Fetching Comapny Parnters Mappings...");
+        showLoading("Fetching Comapany Parnters Mappings...");
         try {
             const response = await $axios.get(`/companies/${id}/partner-mappings`);
             if (response.data.success) {
@@ -94,8 +96,8 @@ export const usePartnerMappings = () => {
         }
     };
 
-    const deleteCompanyPartnerMap = async (customer_id,id) => {
-        showLoading("Deleting Comapny Mapping Partner...");
+    const deleteCompanyPartnerMap = async (customer_id, id) => {
+        showLoading("Deleting Comapany Mapping Partner...");
         try {
             const response = await $axios.delete(`/company-partner-mappings/${id}`)
             if (response.data.success) {
@@ -118,11 +120,134 @@ export const usePartnerMappings = () => {
         }
     };
 
+    const fetchCompanyCredentialsList = async (id) => {
+        showLoading("Fetching Comapany Parnters Crendentials...");
+        try {
+            const response = await $axios.get(`/companies/${id}/partner-credentials`);
+            if (response.data.success) {
+                showSuccess(response.data.message);
+                CredentialsList.value = response.data.data;
+            }
+            else {
+                showError(response.data.message);
+            }
+        } catch (error) {
+            console.error("Error Fetching Comapny Parnters Crendentials:", error);
+
+            const messages = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat()
+                : error.response?.data?.message || "Something went wrong";
+
+            showError(messages);
+        } finally {
+            hideLoading();
+        }
+    };
+
+    const saveCompanyCredentials = async (isEdit, formData, company_id = null, partnerId = null,) => {
+        showLoading(
+            isEdit
+                ? "Updating Company Partner Credentials...."
+                : "Creating Company Partner Credentials...."
+        );
+        try {
+            const { $axios } = useNuxtApp();
+            const url = isEdit ? `/company-partner-credentials/${partnerId}` : `/company-partner-credentials`;
+            const method = isEdit ? "put" : "post";
+            const payload = { ...formData };
+
+            const response = await $axios({ method, url, data: payload });
+
+            if (response.data.success) {
+                showSuccess(response.data.message);
+                if (!isEdit) {
+                    setTimeout(() => {
+                        window.open(`/companies/partners-credentials/${company_id}`, '_blank')
+                    }, 1500)
+                }
+                else {
+                    await fetchCompanyCredentialDetailsById(company_id, payload.integration_method)
+                }
+                return true;
+            }
+            else {
+                showError(response.data.message);
+                return false;
+            }
+        } catch (error) {
+            console.error("Error Saving Company Partner Credentials:", error);
+
+            const messages = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat()
+                : error.response?.data?.message || "Something went wrong";
+
+            showError(messages);
+            return false;
+        } finally {
+            hideLoading();
+        }
+    };
+
+    const DeleteCompanyCredential = async (id, company_id) => {
+        showLoading("Deleting Company Parnter Crendential...");
+        try {
+            const response = await $axios.delete(`/company-partner-credentials/${id}`);
+            if (response.data.success) {
+                showSuccess(response.data.message);
+                fetchCompanyCredentialsList(company_id);
+            }
+            else {
+                showError(response.data.message);
+            }
+        } catch (error) {
+            console.error("Error Deleting Comapany Parnter Crendential:", error);
+
+            const messages = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat()
+                : error.response?.data?.message || "Something went wrong";
+
+            showError(messages);
+        } finally {
+            hideLoading();
+        }
+    };
+
+    const fetchCompanyCredentialDetailsById = async (id, partnerName) => {
+        showLoading("Fetching Company Parnter Crendential...");
+        try {
+            const response = await $axios.get(`/companies/${id}/partner-credentials/${partnerName}`);
+            if (response.data.success) {
+                showSuccess(response.data.message);
+                CredentialsDetails.value = response.data.data;
+            }
+            else {
+                showError(response.data.message);
+            }
+        } catch (error) {
+            console.error("Error Fetching Company Parnter Crendential:", error);
+
+            const messages = error.response?.data?.errors
+                ? Object.values(error.response.data.errors).flat()
+                : error.response?.data?.message || "Something went wrong";
+
+            showError(messages);
+        } finally {
+            hideLoading();
+        }
+    };
+
+
     return {
         PartnersMapList,
         fetchPartnersMapList,
         deleteCompanyPartnerMap,
         saveCompanyPartnerMap,
+        saveCompanyCredentials,
+        fetchCompanyCredentialsList,
+        DeleteCompanyCredential,
+        fetchCompanyCredentialDetailsById,
+        CredentialsDetails,
+        CredentialsList,
         loading,
         statuses
     };
