@@ -40,8 +40,8 @@ export const useAuthStore = defineStore("auth", {
         const twoFactorUser = useCookie("twoFactorUser");
         twoFactorUser.value = null;
 
-        token.value = response.data.token;
-        const role = response.data.role;
+        token.value = response.data.data.token;
+        const role = response.data.data.role;
         const roles = useCookie("roles", {
           maxAge: rememberMe ? 60 * 60 * 24 * 7 : undefined, // 7 days persistence
           secure: true,
@@ -56,9 +56,9 @@ export const useAuthStore = defineStore("auth", {
           sameSite: "strict",
         });
 
-        user.value = response.data.user;
-        this.user = response.data.user;
-        this.token = response.data.token;
+        user.value = response.data.data.user;
+        this.user = response.data.data.user;
+        this.token = response.data.data.token;
 
         return true;
       } catch (error) {

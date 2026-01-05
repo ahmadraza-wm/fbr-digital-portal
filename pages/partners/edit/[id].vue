@@ -11,7 +11,7 @@ definePageMeta({
   <v-card>
     <v-card-title class="mb-4 d-flex align-center bg-primary">
       <BackNavigation color="text-white" />
-      <h4 class="text-h5 py-3 text-white">Upadate Partner</h4>
+      <h4 class="text-h5 py-3 text-white">Update Partner</h4>
     </v-card-title>
     <v-card-text>
       <PartnerForm :isEdit="true" />
