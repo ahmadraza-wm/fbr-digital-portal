@@ -38,6 +38,11 @@ export default [
         to: "companies",
         permission: 'companies.list'
       },
+      {
+        title: "Create Credentials",
+        to: "companies-partners-credentials-add",
+        permission: 'company_partner_credentials.create'
+      },
     ],
   },
   {

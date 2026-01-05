@@ -99,6 +99,10 @@ onMounted(() => {
                   }" v-if="permissionStore.hasPermission('company_partner_mappings.show_by_company')">
                     <VListItemTitle>Partner Mappings</VListItemTitle>
                   </VListItem>
+                  <VListItem :to="`/companies/partners-credentials/${item.id}`" target="_blank"
+                    v-if="permissionStore.hasPermission('company_partner_credentials.index')">
+                    <VListItemTitle>Partners Credentials</VListItemTitle>
+                  </VListItem>
                 </VList>
               </VMenu>
             </VBtn>
