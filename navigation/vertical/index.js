@@ -1,111 +1,97 @@
-import agentIcon from '@images/custom_icons/agent.svg'
-import complaintsIcon from '@images/custom_icons/complaints.svg'
-import complianceIcon from '@images/custom_icons/compliance.svg'
-import countriesIcon from '@images/custom_icons/countries.svg'
-import partnerIcon from '@images/custom_icons/partners.svg'
-import ratesIcon from '@images/custom_icons/rates.svg'
 
 export default [
-  //Back Office
   {
     title: "Dashboard",
     to: { name: "dashboard" },
     icon: { icon: "tabler-layout-dashboard" },
   },
+
+  // ── Admin Section ──────────────────────────────────────────────────────────
   {
-    title: "Countries",
-    to: { name: "countries" },
-    icon: { icon: countriesIcon },
-    permission: "countries.view"
-  },
-  {
-    title: "Currencies",
-    to: { name: "currencies" },
-    icon: { icon: 'tabler-currency' },
-    permission: "countries.view"
+    heading: "Administration",
   },
   {
     title: "Companies",
-    icon: { icon: 'tabler-building-skyscraper' },
+    icon: { icon: "tabler-building-skyscraper" },
     children: [
-      {
-        title: "Create Company",
-        to: "companies-add",
-        permission: 'companies.create'
-      },
-      {
-        title: "Companies List",
-        to: "companies",
-        permission: 'companies.list'
-      },
-      {
-        title: "Create Credentials",
-        to: "companies-partners-credentials-add",
-        permission: 'company_partner_credentials.create'
-      },
+      { title: "All Companies", to: { name: "admin-companies" }, icon: { icon: "tabler-list" } },
+      { title: "Add Company", to: { name: "admin-companies-create" }, icon: { icon: "tabler-plus" } },
     ],
   },
   {
-    title: "Partners",
-    icon: { icon: partnerIcon },
+    title: "Users",
+    icon: { icon: "tabler-users" },
     children: [
-      {
-        title: "Create Partner",
-        to: "partners-add",
-        permission: 'partners.create'
-      },
-      {
-        title: "Partner List",
-        to: "partners",
-        permission: 'partners.list'
-      },
-    ]
+      { title: "All Users", to: { name: "admin-users" }, icon: { icon: "tabler-list" } },
+      { title: "Add User", to: { name: "admin-users-create" }, icon: { icon: "tabler-plus" } },
+    ],
+  },
+
+  // ── Company Section ────────────────────────────────────────────────────────
+  {
+    heading: "Company",
   },
   {
-    title: "Banks",
-    icon: { icon: 'tabler-building-bank' },
+    title: "Customers",
+    icon: { icon: "tabler-users-group" },
     children: [
-      {
-        title: "Create Bank",
-        to: "banks-add",
-        permission: 'banks.create'
-      },
-      {
-        title: "Banks List",
-        to: "banks",
-        permission: 'banks.list'
-      },
+      { title: "All Customers", to: { name: "customers" }, icon: { icon: "tabler-list" } },
+      { title: "Add Customer", to: { name: "customers-create" }, icon: { icon: "tabler-plus" } },
     ],
   },
   {
-    title: "Wallets",
-    icon: { icon: 'tabler-wallet' },
+    title: "Products",
+    icon: { icon: "tabler-package" },
     children: [
-      {
-        title: "Create Wallet",
-        to: "wallets-add",
-        permission: 'wallets.create'
-      },
-      {
-        title: "Wallets List",
-        to: "wallets",
-        permission: 'wallets.list'
-      },
+      { title: "All Products", to: { name: "products" }, icon: { icon: "tabler-list" } },
+      { title: "Add Product", to: { name: "products-create" }, icon: { icon: "tabler-plus" } },
     ],
   },
+
+  // ── FBR Digital Invoicing ──────────────────────────────────────────────────
   {
-    title: "Cash Destinations",
-    icon: { icon: 'tabler-cash' },
+    heading: "FBR Digital Invoicing",
+  },
+
+  // FBR Digital Invoicing
+  {
+    title: "FBR Digital Invoicing",
+    icon: { icon: "tabler-receipt-tax" },
     children: [
       {
-        title: "Create Destination",
-        to: "cash-destinations-add",
-        permission: 'cash_destinations.create'
+        title: "DI Dashboard",
+        to: { name: "fbr-dashboard" },
+        icon: { icon: "tabler-home" },
       },
       {
-        title: "Destinations List",
-        to: "cash-destinations",
-        permission: 'wallets.list'
+        title: "Submit Invoice",
+        to: { name: "fbr-submit" },
+        icon: { icon: "tabler-send" },
+      },
+      {
+        title: "Validate Invoice",
+        to: { name: "fbr-validate" },
+        icon: { icon: "tabler-shield-check" },
+      },
+      {
+        title: "Reference Data",
+        to: { name: "fbr-reference" },
+        icon: { icon: "tabler-database" },
+      },
+      {
+        title: "STATL Lookup",
+        to: { name: "fbr-statl" },
+        icon: { icon: "tabler-search" },
+      },
+      {
+        title: "Invoice History",
+        to: { name: "fbr-history" },
+        icon: { icon: "tabler-history" },
+      },
+      {
+        title: "API Settings",
+        to: { name: "fbr-settings" },
+        icon: { icon: "tabler-settings" },
       },
     ],
   },

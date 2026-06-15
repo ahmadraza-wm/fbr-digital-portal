@@ -65,52 +65,6 @@ const handleNavScroll = evt => {
 
 const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
 
-const normalize = (p) => {
-  if (!p) return null
-  if (typeof p === 'string') return p
-  return p.name || p.permission_name || p.permission || null
-}
-
-const filterMenu = (items, hasPermission) => {
-  return items
-    .map(item => {
-      const perm = normalize(item.permission)
-
-      // filter children first
-      const children = item.children ? filterMenu(item.children, hasPermission) : []
-
-      if (item.children) {
-        // show parent only if at least one child remains
-        if (children.length > 0) {
-          return {
-            ...item,
-            children,
-          }
-        }
-        return null
-      }
-
-      // no children
-      if (!perm || hasPermission(perm)) {
-        return { ...item }
-      }
-
-      return null
-    })
-    .filter(Boolean)
-}
-
-const permissionStore = usePermissionStore()
-
-const filteredNavItems = computed(() => {
-  if (!permissionStore.isLoaded) return []
-
-  return filterMenu(props.navItems, perm =>
-    permissionStore.assigned_permissions.some(
-      (p) => normalize(p) === perm
-    )
-  )
-})
 </script>
 
 <template>
@@ -187,17 +141,9 @@ const filteredNavItems = computed(() => {
         :options="{ wheelPropagation: false }"
         @ps-scroll-y="handleNavScroll"
       >
-        <template v-if="!permissionStore.isLoaded">
-          <li v-for="n in 10" :key="n" class="px-0 mx-0 py-1 flex items-center">
-            <v-skeleton-loader
-              :type="configStore.isVerticalNavCollapsed ? 'avatar' : 'list-item-avatar'"
-              class="rounded-sm"
-            />
-          </li>
-        </template>
         <Component
           :is="resolveNavItemComponent(item)"
-          v-for="(item, index) in filteredNavItems"
+          v-for="(item, index) in props.navItems"
           :key="index"
           :item="item"
         />
