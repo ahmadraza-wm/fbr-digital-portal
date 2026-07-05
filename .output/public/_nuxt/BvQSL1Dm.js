@@ -1,0 +1,1 @@
+import{T as t,G as u,C as c,J as r,b0 as d}from"./zCn5BSp3.js";const l=r({eager:Boolean},"lazy");function p(o,e){const a=t(!1),s=u(()=>a.value||o.eager||e.value);c(e,()=>a.value=!0);function n(){o.eager||(a.value=!1)}return{isBooted:a,hasContent:s,onAfterLeave:n}}function m(){const e=d("useScopeId").vnode.scopeId;return{scopeId:e?{[e]:""}:void 0}}export{p as a,l as m,m as u};
