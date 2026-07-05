@@ -4,7 +4,7 @@ import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { VForm } from 'vuetify/components/VForm'
-import { useGoogleVerify } from "@/composables/useGoogleVerify";
+// import { useGoogleVerify } from "@/composables/useGoogleVerify";
  const auth = useAuthStore();
 const otpValidator = value => {
   if (!value || value.length !== 6) return 'OTP must be 6 digits';

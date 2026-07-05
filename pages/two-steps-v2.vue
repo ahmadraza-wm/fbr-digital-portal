@@ -6,7 +6,7 @@ import authV2MaskDark from '@images/pages/misc-mask-dark.png'
 import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { useGoogleVerify } from "@/composables/useGoogleVerify";
+// import { useGoogleVerify } from "@/composables/useGoogleVerify";
 
 definePageMeta({
   layout: 'blank',
@@ -16,19 +16,31 @@ definePageMeta({
 
 
 
-const { 
-  submit2FAToken,
-    tokenInput,
-    isOtpInserted, 
-  } = useGoogleVerify();
+// const { 
+//   submit2FAToken,
+//     tokenInput,
+//     isOtpInserted, 
+//   } = useGoogleVerify();
 
 
 const authThemeImg = useGenerateImageVariant(authV2TwoStepIllustrationLight, authV2TwoStepIllustrationDark)
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 const router = useRouter()
+const tokenInput = ref('')
+const isOtpInserted = ref(false)
 
+const submit2FAToken = () => {
+  if (!tokenInput.value || tokenInput.value.length !== 6) {
+    return
+  }
 
+  isOtpInserted.value = true
 
+  setTimeout(() => {
+    isOtpInserted.value = false
+    router.push('/')
+  }, 1000)
+}
 
 const onFinish = () => {
   isOtpInserted.value = true
@@ -49,46 +61,19 @@ const onFinish = () => {
     </div>
   </NuxtLink>
 
-  <VRow
-    class="auth-wrapper bg-surface"
-    no-gutters
-  >
-    <VCol
-      md="8"
-      class="d-none d-md-flex"
-    >
+  <VRow class="auth-wrapper bg-surface" no-gutters>
+    <VCol md="8" class="d-none d-md-flex">
       <div class="position-relative bg-background w-100 me-0">
-        <div
-          class="d-flex align-center justify-center w-100 h-100"
-          style="padding-inline: 150px;"
-        >
-          <VImg
-            max-width="468"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
-          />
+        <div class="d-flex align-center justify-center w-100 h-100" style="padding-inline: 150px;">
+          <VImg max-width="468" :src="authThemeImg" class="auth-illustration mt-16 mb-2" />
         </div>
 
-        <img
-          class="auth-footer-mask flip-in-rtl"
-          :src="authThemeMask"
-          alt="auth-footer-mask"
-          height="280"
-          width="100"
-        >
+        <img class="auth-footer-mask flip-in-rtl" :src="authThemeMask" alt="auth-footer-mask" height="280" width="100">
       </div>
     </VCol>
 
-    <VCol
-      cols="12"
-      md="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-    >
-      <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-6"
-      >
+    <VCol cols="12" md="4" class="auth-card-v2 d-flex align-center justify-center">
+      <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-6">
         <VCardText>
           <h4 class="text-h4 mb-1">
             Two Step Verification 💬
@@ -109,24 +94,12 @@ const onFinish = () => {
                 <h6 class="text-body-1">
                   Type your 6 digit security code
                 </h6>
-                <VOtpInput
-                  v-model="tokenInput"
-                  :disabled="isOtpInserted"
-                  type="number"
-                  class="pa-0"
-
-                  
-                />
+                <VOtpInput v-model="tokenInput" :disabled="isOtpInserted" type="number" class="pa-0" />
               </VCol>
 
               <!-- reset password -->
               <VCol cols="12">
-                <VBtn
-                  block
-                  :loading="isOtpInserted"
-                  :disabled="isOtpInserted"
-                  type="submit"
-                >
+                <VBtn block :loading="isOtpInserted" :disabled="isOtpInserted" type="submit">
                   Verify my account
                 </VBtn>
               </VCol>
@@ -147,7 +120,7 @@ const onFinish = () => {
 </template>
 
 <style lang="scss">
-@use "@core/scss/template/pages/page-auth.scss";
+@use "@core/scss/template/pages/page-auth";
 
 .v-otp-input {
   .v-otp-input__content {
