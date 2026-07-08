@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2026-07-05",
   ssr:true,
   nitro: {
-  preset: "static"
+  preset: "vercel"
   },
   app: {
     head: {
